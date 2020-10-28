@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#818181"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".PandemicMainActivity">
 
     <LinearLayout
         android:id="@+id/toplayout"
