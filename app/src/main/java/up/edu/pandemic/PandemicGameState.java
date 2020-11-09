@@ -54,6 +54,7 @@ public class PandemicGameState extends GameState {
 
     private City[][] playerHands;
     private City[] currCity;
+    private Board cities;
 
     private Deck infectionDeck;
     private Deck playerDeck;
@@ -85,9 +86,11 @@ public class PandemicGameState extends GameState {
         this.needToDiscard = false;
         this.drawCardsLeft = NUM_DRAW_CARDS;
 
-        // make the decks, initialize to same deck so they contain the same set of cities
-        this.infectionDeck = new Deck(getCities(), rng);
-        this.playerDeck = this.infectionDeck;
+        this.cities = new Board();
+
+        // make the decks, initialize so they contain the same set of cities
+        this.infectionDeck = new Deck(this.cities.getAllCities(), rng);
+        this.playerDeck = new Deck(this.cities.getAllCities(), rng);
 
         // initialize player hands, the max cards are hand limit + 1 in the case of getting an
         // eighth card, then the player will be prompted to discard before getting any more cards
@@ -169,180 +172,6 @@ public class PandemicGameState extends GameState {
 
         this.gameCondition = orig.gameCondition;
     } // PandemicState()
-
-    /** getCities()
-     * This is a helper method which initializes all of the cities that are on the Pandemic game
-     * board, complete with coordinates and their connections.
-     * @return An array of all the cities.
-     */
-    public City[] getCities() {
-        // blue cities
-        City chicago = new City("Chicago", Disease.BLUE,
-                new float[][]{{214.8f, 291.7f}, {261.8f, 314.7f}});
-        City sanFrancisco = new City("San Francisco", Disease.BLUE,
-                new float[][]{{45.9f, 314.7f}, {132.8f, 371.6f}});
-        City montreal = new City("Montreal", Disease.BLUE,
-                new float[][]{{336.7f, 286.7f}, {388.7f, 328.7f}});
-        City newYork = new City("New York", Disease.BLUE,
-                new float[][]{{426.7f, 305.8f}, {482.7f, 343.6f}});
-        City washington = new City("Washington", Disease.BLUE,
-                new float[][]{{396.7f, 380.6f}, {452.67f, 421.6f}});
-        City atlanta = new City("Atlanta", Disease.BLUE,
-                new float[][]{{258.8f, 374.6f}, {299.8f, 420.6f}});
-        City london = new City("London", Disease.BLUE,
-                new float[][]{{632.6f, 220.7f}, {674.6f, 260.7f}});
-        City essen = new City("Essen", Disease.BLUE,
-                new float[][]{{750.5f, 219.7f}, {785.5f, 243.7f}});
-        City stPetersburg = new City("St. Petersburg", Disease.BLUE,
-                new float[][]{{871.5f, 184.8f}, {922.4f, 217.7f}});
-        City madrid = new City("Madrid", Disease.BLUE,
-                new float[][]{{622.6f, 344.6f}, {663.6f, 388.6f}});
-        City paris = new City("Paris", Disease.BLUE,
-                new float[][]{{742.5f, 291.7f}, {770.5f, 339.6f}});
-        City milan = new City("Milan", Disease.BLUE,
-                new float[][]{{823.5f, 260.7f}, {854.5f, 310.7f}});
-
-        // yellow cities
-        City losAngeles = new City("Los Angeles", Disease.YELLOW,
-                new float[][]{{101.9f, 441.6f}, {151.8f, 490.5f}});
-        City miami = new City("Miami", Disease.YELLOW,
-                new float[][]{{350.7f, 470.5f}, {395.7f, 520.5f}});
-        City mexicoCity = new City("Mexico City", Disease.YELLOW,
-                new float[][]{{212.8f, 482.5f}, {252.8f, 526.5f}});
-        City bogota = new City("Bogota", Disease.YELLOW,
-                new float[][]{{332.7f, 595.4f}, {371.7f, 631.4f}});
-        City lima = new City("Lima", Disease.YELLOW,
-                new float[][]{{278.8f, 719.3f}, {342.7f, 754.3f}});
-        City santiago = new City("Santiago", Disease.YELLOW,
-                new float[][]{{307.8f, 848.2f}, {363.7f, 887.2f}});
-        City buenosAires = new City("Buenos Aires", Disease.YELLOW,
-                new float[][]{{429.7f, 833.2f}, {490.7f, 869.2f}});
-        City saoPaulo = new City("Sao Paulo", Disease.YELLOW,
-                new float[][]{{496.7f, 728.3f}, {553.6f, 778.3f}});
-        City lagos = new City("Lagos", Disease.YELLOW,
-                new float[][]{{722.5f, 549.5f}, {769.5f, 615.5f}});
-        City khartoum = new City("Khartoum", Disease.YELLOW,
-                new float[][]{{857.5f, 547.5f}, {922.4f, 595.4f}});
-        City kinshasa = new City("Kinshasa", Disease.YELLOW,
-                new float[][]{{790.5f, 642.4f}, {842.5f, 691.3f}});
-        City johannesburg = new City("Johannesburg", Disease.YELLOW,
-                new float[][]{{849.5f, 754.3f}, {911.4f, 806.3f}});
-
-        // black cities
-        City moscow = new City("Moscow", Disease.BLACK,
-                new float[][]{{952.4f, 257.7f}, {1000.4f, 305.7f}});
-        City istanbul = new City("Istanbul", Disease.BLACK,
-                new float[][]{{856.5f, 318.7f}, {915.4f, 376.6f}});
-        City algiers = new City("Algiers", Disease.BLACK,
-                new float[][]{{755.5f, 386.6f}, {806.5f, 448.6f}});
-        City tehran = new City("Tehran", Disease.BLACK,
-                new float[][]{{1027.4f, 293.7f}, {1095.3f, 345.6f}});
-        City baghdad = new City("Baghdad", Disease.BLACK,
-                new float[][]{{932.4f, 379.6f}, {994.4f, 426.6f}});
-        City cairo = new City("Cairo", Disease.BLACK,
-                new float[][]{{845.5f, 419.6f}, {905.4f, 471.5f}});
-        City riyadh = new City("Riyadh", Disease.BLACK,
-                new float[][]{{936.4f, 482.5f}, {1017.4f, 549.5f}});
-        City karachi = new City("Karachi", Disease.BLACK,
-                new float[][]{{1051.4f, 416.6f}, {1112.3f, 469.5f}});
-        City delhi = new City("Delhi", Disease.BLACK,
-                new float[][]{{1138.3f, 376.6f}, {1202.3f, 428.6f}});
-        City mumbai = new City("Mumbai", Disease.BLACK,
-                new float[][]{{1053.3f, 507.5f}, {1117.3f, 559.5f}});
-        City chennai = new City("Chennai", Disease.BLACK,
-                new float[][]{{1140.3f, 561.5f}, {1203.2f, 621.4f}});
-        City kolkata = new City("Kolkata", Disease.BLACK,
-                new float[][]{{1220.2f, 408.6f}, {1280.2f, 464.5f}});
-
-        // red cities
-        City beijing = new City("Beijing", Disease.RED,
-                new float[][]{{1269.2f, 274.7f}, {1342.2f, 329.7f}});
-        City seoul = new City("Seoul", Disease.RED,
-                new float[][]{{1375.2f, 262.7f}, {1444.2f, 329.7f}});
-        City tokyo = new City("Tokyo", Disease.RED,
-                new float[][]{{1466.1f, 322.7f}, {1520.1f, 374.6f}});
-        City shanghai = new City("Shanghai", Disease.RED,
-                new float[][]{{1283.2f, 373.6f}, {1357.2f, 421.6f}});
-        City hongKong = new City("Hong Kong", Disease.RED,
-                new float[][]{{1297.2f, 462.5f}, {1349.2f, 516.5f}});
-        City taipei = new City("Taipei", Disease.RED,
-                new float[][]{{1389.2f, 433.6f}, {1464.1f, 500.5f}});
-        City osaka = new City("Osaka", Disease.RED,
-                new float[][]{{1475.1f, 420.6f}, {1533.1f, 478.5f}});
-        City bangkok = new City("Bangkok", Disease.RED,
-                new float[][]{{1228.2f, 519.5f}, {1288.2f, 574.4f}});
-        City hoChiMinhCity = new City("Ho Chi Minh City", Disease.RED,
-                new float[][]{{1308.2f, 593.4f}, {1368.1f, 644.4f}});
-        City manila = new City("Manila", Disease.RED,
-                new float[][]{{1422.1f, 590.4f}, {1476.1f, 652.4f}});
-        City jakarta = new City("Jakarta", Disease.RED,
-                new float[][]{{1222.2f, 657.4f}, {1285.2f, 719.3f}});
-        City sydney = new City("Sydney", Disease.RED,
-                new float[][]{{1474.1f, 817.2f}, {1554.1f, 887.2f}});
-
-        //blue connections
-        chicago.setConnections(new City[]{sanFrancisco, losAngeles, mexicoCity, atlanta, montreal});
-        washington.setConnections(new City[]{atlanta, montreal, newYork});
-        atlanta.setConnections(new City[]{washington, chicago, miami});
-        newYork.setConnections(new City[]{montreal, washington, madrid, london});
-        montreal.setConnections(new City[]{chicago, newYork, washington});
-        sanFrancisco.setConnections(new City[]{losAngeles, chicago, tokyo, manila});
-        london.setConnections(new City[]{essen, newYork, madrid, paris});
-        madrid.setConnections(new City[]{newYork, london, paris, saoPaulo, algiers});
-        paris.setConnections(new City[]{london, essen, milan, algiers, madrid});
-        essen.setConnections(new City[]{london, paris, milan, stPetersburg});
-        milan.setConnections(new City[]{essen, paris, istanbul});
-        stPetersburg.setConnections(new City[]{essen, istanbul, moscow});
-
-        //black connections
-        istanbul.setConnections(new City[]{stPetersburg, moscow, milan, algiers, cairo, baghdad});
-        moscow.setConnections(new City[]{stPetersburg, istanbul, tehran});
-        algiers.setConnections(new City[]{madrid, paris, istanbul, cairo});
-        cairo.setConnections(new City[]{algiers, istanbul, baghdad, riyadh});
-        baghdad.setConnections(new City[]{istanbul, tehran, karachi, riyadh, cairo});
-        riyadh.setConnections(new City[]{cairo, baghdad, karachi});
-        karachi.setConnections(new City[]{riyadh, baghdad, tehran, delhi, mumbai});
-        tehran.setConnections(new City[]{moscow, baghdad, karachi, delhi});
-        delhi.setConnections(new City[]{tehran, karachi, mumbai, chennai, kolkata});
-        mumbai.setConnections(new City[]{karachi, delhi, chennai});
-        kolkata.setConnections(new City[]{delhi, chennai, bangkok, hongKong});
-        chennai.setConnections(new City[]{mumbai, delhi, kolkata, bangkok, jakarta});
-
-        //red connections
-        bangkok.setConnections(new City[]{kolkata, chennai, hongKong, jakarta, hoChiMinhCity});
-        hongKong.setConnections(new City[]{kolkata, bangkok, hoChiMinhCity, manila, taipei, shanghai});
-        jakarta.setConnections(new City[]{chennai, bangkok, hoChiMinhCity, sydney});
-        hoChiMinhCity.setConnections(new City[]{jakarta, bangkok, hongKong, manila});
-        manila.setConnections(new City[]{hoChiMinhCity, hongKong, taipei, sydney, sanFrancisco});
-        taipei.setConnections(new City[]{hongKong, osaka, manila, shanghai});
-        shanghai.setConnections(new City[]{beijing, seoul, tokyo, hongKong, taipei});
-        beijing.setConnections(new City[]{shanghai, seoul});
-        seoul.setConnections(new City[]{beijing, shanghai, tokyo});
-        tokyo.setConnections(new City[]{seoul, shanghai, osaka, sanFrancisco});
-        osaka.setConnections(new City[]{tokyo, taipei});
-        sydney.setConnections(new City[]{jakarta, manila, losAngeles});
-
-        //yellow connections
-        losAngeles.setConnections(new City[]{sydney, sanFrancisco, chicago, mexicoCity});
-        mexicoCity.setConnections(new City[]{losAngeles, chicago, miami, bogota, lima});
-        miami.setConnections(new City[]{mexicoCity, atlanta, washington, bogota});
-        bogota.setConnections(new City[]{mexicoCity, miami, lima, buenosAires, saoPaulo});
-        lima.setConnections(new City[]{mexicoCity, bogota, santiago});
-        santiago.setConnections(new City[]{lima});
-        buenosAires.setConnections(new City[]{bogota, saoPaulo});
-        saoPaulo.setConnections(new City[]{buenosAires, bogota, madrid, lagos});
-        lagos.setConnections(new City[]{saoPaulo, khartoum, kinshasa});
-        khartoum.setConnections(new City[]{cairo, lagos, kinshasa, johannesburg});
-        kinshasa.setConnections(new City[]{lagos, khartoum, johannesburg});
-        johannesburg.setConnections(new City[]{kinshasa, khartoum});
-
-        return new City[]{chicago, sanFrancisco, montreal, newYork, washington, atlanta, london,
-                essen, stPetersburg, madrid, paris, milan, losAngeles, miami, mexicoCity, bogota,
-                lima, santiago, buenosAires, saoPaulo, lagos, khartoum, kinshasa, johannesburg,
-                moscow, istanbul, algiers, tehran, baghdad, cairo, riyadh, karachi, delhi, mumbai,
-                chennai, kolkata, beijing, seoul, tokyo, shanghai, hongKong, taipei, osaka, bangkok,
-                hoChiMinhCity, manila, jakarta, sydney};
-    } // getCities()
 
     /** needToDiscard()
      * This method checks to see if the current player has too many cards. If so, the only action
@@ -975,6 +804,66 @@ public class PandemicGameState extends GameState {
     public boolean chooseCity(int player, City city) {
         return false;
     } // chooseCity()
+
+    public Disease[] getDiseases() {
+        return diseases;
+    }
+
+    public int getOutbreaks() {
+        return outbreaks;
+    }
+
+    public int getInfRate() {
+        return infRate;
+    }
+
+    public int getStationsLeft() {
+        return stationsLeft;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+
+    public int getCurrPlayer() {
+        return currPlayer;
+    }
+
+    public int getActionsLeft() {
+        return actionsLeft;
+    }
+
+    public boolean isNeedToDiscard() {
+        return needToDiscard;
+    }
+
+    public int getDrawCardsLeft() {
+        return drawCardsLeft;
+    }
+
+    public City[][] getPlayerHands() {
+        return playerHands;
+    }
+
+    public City[] getCurrCity() {
+        return currCity;
+    }
+
+    public Deck getInfectionDeck() {
+        return infectionDeck;
+    }
+
+    public Deck getPlayerDeck() {
+        return playerDeck;
+    }
+
+    public int getEpiLeft() {
+        return epiLeft;
+    }
+
+    public int getGameCondition() {
+        return gameCondition;
+    }
 
     @NonNull
     @Override

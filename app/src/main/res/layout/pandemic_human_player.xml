@@ -158,13 +158,6 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/uncuredheader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="IN PROGRESS:"
-                android:textColor="#E8DFDF" />
-
-            <TextView
                 android:id="@+id/uncureddiseases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -178,13 +171,6 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/curedheader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CURED:"
-                android:textColor="#E8DFDF" />
-
-            <TextView
                 android:id="@+id/cureddiseases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -196,13 +182,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/eradicatedheader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ERADICATED:"
-                android:textColor="#E8DFDF" />
 
             <TextView
                 android:id="@+id/eradicateddiseases"
@@ -227,13 +206,11 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <up.edu.pandemic.PandemicMapView
                 android:id="@+id/mapview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="10"
-                android:cropToPadding="false"
-                app:srcCompat="@drawable/pandemicmap" />
+                android:layout_weight="10" />
 
             <LinearLayout
                 android:id="@+id/cardslayout"
@@ -319,6 +296,13 @@
                     android:padding="5dp"
                     android:text="TOKYO"
                     android:textColor="#FFFFFF" />
+
+                <Button
+                    android:id="@+id/card8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="CARD" />
             </LinearLayout>
         </LinearLayout>
 
@@ -418,6 +402,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="PASS" />
+
+        <Button
+            android:id="@+id/endturnbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="END TURN" />
 
     </LinearLayout>
 </LinearLayout>

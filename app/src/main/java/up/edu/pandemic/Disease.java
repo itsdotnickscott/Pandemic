@@ -58,6 +58,16 @@ public class Disease {
         return this.cubesLeft;
     } // getCubesLeft()
 
+    public String getName() {
+        switch(this.color) {
+            case BLUE: return "Blue";
+            case YELLOW: return "Yellow";
+            case BLACK: return "Black";
+            case RED: return "Red";
+        }
+        return null;
+    }
+
     /** addCube()
      * This method is called whenever its infection card is pulled.
      */

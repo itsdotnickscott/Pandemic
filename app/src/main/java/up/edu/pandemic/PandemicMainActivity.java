@@ -38,7 +38,7 @@ public class PandemicMainActivity extends GameMainActivity {
         // - from 1 to 2 players
         // - name of game is "Counter Game"
         // - port number as defined above
-        GameConfig defaultConfig = new GameConfig(playerTypes, 1, 2, "Pandemic",
+        GameConfig defaultConfig = new GameConfig(playerTypes, 2, 4, "Pandemic",
                 PORT_NUMBER);
 
         // Add the default players to the configuration
@@ -57,6 +57,6 @@ public class PandemicMainActivity extends GameMainActivity {
 
     @Override
     public LocalGame createLocalGame() {
-        return new PandemicLocalGame();
+        return new PandemicLocalGame(this.getConfig().getNumPlayers());
     }
 }

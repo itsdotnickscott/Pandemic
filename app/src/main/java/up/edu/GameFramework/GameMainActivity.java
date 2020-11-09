@@ -143,6 +143,11 @@ public abstract class GameMainActivity extends Activity implements
      * Public Methods
      * --------------------------------------------------------------------
      */
+    public GameConfig getConfig() {
+        return this.config;
+    }
+
+
     /**
      * onCreate
      *

@@ -9,8 +9,6 @@ import java.util.Random;
  * @version 20 October 2020.
  */
 public class Deck {
-    public static final int NUM_CITIES = 48;
-
     // instance variables
     private City[] deck;
     private int currPos;
@@ -103,7 +101,7 @@ public class Deck {
      * @return The bottom card.
      */
     public City drawBottomCard() {
-        return this.deck[NUM_CITIES - 1];
+        return this.deck[Board.NUM_CITIES - 1];
     } // drawBottomCard()
 
     /** shuffleEpidemic()
@@ -112,8 +110,8 @@ public class Deck {
      */
     public void shuffleEpidemic() {
         // shift all cards up
-        City temp = this.deck[NUM_CITIES - 1];
-        for(int i = NUM_CITIES - 1; i > this.currPos + 1; i--) {
+        City temp = this.deck[Board.NUM_CITIES - 1];
+        for(int i = Board.NUM_CITIES - 1; i > this.currPos + 1; i--) {
             this.deck[i] = this.deck[i - 1];
         }
         // in order to put the new card onto the discard pile
@@ -154,6 +152,17 @@ public class Deck {
 
         return count;
     } // getDeckSize()
+
+    public int getCardsLeft() {
+        int count = 0;
+        for(int i = this.currPos + 1; i < this.deck.length; i++) {
+            if(!this.deck[i].getName().equals("NULL")) {
+                count++;
+            }
+        }
+
+        return count;
+    }
 
     /** getCityAtIndex()
      * @param idx The index of the deck.
