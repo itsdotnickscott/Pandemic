@@ -1,7 +1,6 @@
 package up.edu.pandemic;
 
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +12,11 @@ import up.edu.GameFramework.infoMessage.GameInfo;
 public class PandemicHumanPlayer extends GameHumanPlayer implements View.OnClickListener,
 View.OnTouchListener {
     // instance variables
+    public static final int GREEN = 0;
+    public static final int PINK = 1;
+    public static final int BLACK = 2;
+    public static final int WHITE = 3;
+
     private Button driveButton = null;
     private Button directButton = null;
     private Button charterButton = null;
@@ -45,7 +49,9 @@ View.OnTouchListener {
     private TextView uncuredDiseases = null;
     private TextView curedDiseases = null;
     private TextView eradicatedDiseases = null;
-    private SurfaceView mapView = null;
+    private TextView actionsLeft = null;
+    private TextView playerCards = null;
+    private PandemicMapView mapView = null;
 
     private GameMainActivity myActivity;
     private Board cities;
@@ -54,6 +60,7 @@ View.OnTouchListener {
     private DirectFlightAction directFlight = null;
     private ShuttleFlightAction shuttleFlight = null;
     private CharterFlightAction charterFlight = null;
+    int actions;
 
     /**
      * constructor
@@ -63,49 +70,53 @@ View.OnTouchListener {
     public PandemicHumanPlayer(String name) {
         super(name);
         this.cities = new Board();
+        this.actions = 4;
     }
 
     @Override
     public void onClick(View view) {
+        // reset incomplete actions
+        this.driveFerry = null;
+        this.charterFlight = null;
+        this.directFlight = null;
+        this.shuttleFlight = null;
+
+        // send an action based off of the button pressed
         if(view.getId() == R.id.drivebutton) {
-            this.charterFlight = null;
-            this.directFlight = null;
-            this.shuttleFlight = null;
             this.driveFerry = new DriveFerryAction(this);
+            infoBar.setText("DRIVE/FERRY: CHOOSE A CITY ON THE MAP");
         }
         else if(view.getId() == R.id.directbutton) {
-            this.charterFlight = null;
-            this.driveFerry = null;
-            this.shuttleFlight = null;
             this.directFlight = new DirectFlightAction(this);
+            infoBar.setText("DIRECT FLIGHT: CHOOSE A CITY ON THE MAP");
         }
         else if(view.getId() == R.id.charterbutton) {
-            this.directFlight = null;
-            this.driveFerry = null;
-            this.shuttleFlight = null;
             this.charterFlight = new CharterFlightAction(this);
+            infoBar.setText("CHARTER FLIGHT: CHOOSE A CITY ON THE MAP");
         }
         else if(view.getId() == R.id.shuttlebutton) {
-            this.directFlight = null;
-            this.driveFerry = null;
-            this.charterFlight = null;
             this.shuttleFlight = new ShuttleFlightAction(this);
+            infoBar.setText("SHUTTLE FLIGHT: CHOOSE A CITY ON THE MAP");
         }
         else if(view.getId() == R.id.treatbutton) {
             TreatAction action = new TreatAction(this);
             this.game.sendAction(action);
+            this.mapView.invalidate();
         }
         else if(view.getId() == R.id.sharebutton) {
             ShareAction action = new ShareAction(this);
             this.game.sendAction(action);
+            this.mapView.invalidate();
         }
         else if(view.getId() == R.id.buildbutton) {
             BuildStationAction action = new BuildStationAction(this);
             this.game.sendAction(action);
+            this.mapView.invalidate();
         }
         else if(view.getId() == R.id.curebutton) {
             CureAction action = new CureAction(this);
             this.game.sendAction(action);
+            this.mapView.invalidate();
         }
         else if(view.getId() == R.id.passbutton) {
             ForgoAction action = new ForgoAction(this);
@@ -115,36 +126,12 @@ View.OnTouchListener {
             EndTurnAction action = new EndTurnAction(this);
             this.game.sendAction(action);
         }
-        else if(view.getId() == R.id.card1) {
-            DiscardAction action = new DiscardAction(this, 0);
-            this.game.sendAction(action);
-        }
-        else if(view.getId() == R.id.card2) {
-            DiscardAction action = new DiscardAction(this, 1);
-            this.game.sendAction(action);
-        }
-        else if(view.getId() == R.id.card3) {
-            DiscardAction action = new DiscardAction(this, 2);
-            this.game.sendAction(action);
-        }
-        else if(view.getId() == R.id.card4) {
-            DiscardAction action = new DiscardAction(this, 3);
-            this.game.sendAction(action);
-        }
-        else if(view.getId() == R.id.card5) {
-            DiscardAction action = new DiscardAction(this, 4);
-            this.game.sendAction(action);
-        }
-        else if(view.getId() == R.id.card6) {
-            DiscardAction action = new DiscardAction(this, 5);
-            this.game.sendAction(action);
-        }
-        else if(view.getId() == R.id.card7) {
-            DiscardAction action = new DiscardAction(this, 6);
-            this.game.sendAction(action);
-        }
-        else if(view.getId() == R.id.card8) {
-            DiscardAction action = new DiscardAction(this, 7);
+        else if(view.getId() == R.id.card1 || view.getId() == R.id.card2 ||
+                view.getId() == R.id.card3 || view.getId() == R.id.card4 ||
+                view.getId() == R.id.card5 || view.getId() == R.id.card6 ||
+                view.getId() == R.id.card7 || view.getId() == R.id.card8) {
+            Button button = (Button) view;
+            DiscardAction action = new DiscardAction(this, button.getText().toString());
             this.game.sendAction(action);
         }
     }
@@ -157,16 +144,20 @@ View.OnTouchListener {
     @Override
     public void receiveInfo(GameInfo info) {
         if(info instanceof PandemicGameState) {
-            blueLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.BLUE].getCubesLeft());
-            redLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.RED].getCubesLeft());
-            blackLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.BLACK].getCubesLeft());
-            yellowLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.YELLOW].getCubesLeft());
+            // update the cubes left
+            this.blueLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.BLUE].getCubesLeft());
+            this.redLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.RED].getCubesLeft());
+            this.blackLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.BLACK].getCubesLeft());
+            this.yellowLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.YELLOW].getCubesLeft());
 
-            infRate.setText("Infection Rate: " + ((PandemicGameState) info).getInfRate());
-            turnsLeft.setText("Turns Left: " + ((PandemicGameState) info).getPlayerDeck().getCardsLeft() / 2);
-            epiLeft.setText("Epidemics Left: " + ((PandemicGameState) info).getEpiLeft());
+            // update important info
+            this.infRate.setText("Infection Rate: " + ((PandemicGameState) info).getInfRate());
+            this.turnsLeft.setText("Turns Left: " + ((PandemicGameState) info).getPlayerDeck().getCardsLeft() / 2);
+            this.epiLeft.setText("Epidemics Left: " + ((PandemicGameState) info).getEpiLeft());
+            this.outbreakCounter.setText("Outbreaks: " + ((PandemicGameState) info).getOutbreaks());
+            this.actionsLeft.setText("Actions Left: " + ((PandemicGameState) info).getActionsLeft());
 
-            outbreakCounter.setText("Outbreaks: " + ((PandemicGameState) info).getOutbreaks());
+            // show the status of the four diseases
             String curedString = "";
             String uncuredString = "";
             String eradicatedString = "";
@@ -174,22 +165,66 @@ View.OnTouchListener {
             for(int i = 0; i < Disease.NUM_DISEASES; i++) {
                 switch (((PandemicGameState) info).getDiseases()[i].getState()) {
                     case Disease.CURED:
-                        curedString = curedString + "\n"+((PandemicGameState) info).getDiseases()[i].getName();
+                        curedString += ((PandemicGameState) info).getDiseases()[i].getName() + "\n";
                         break;
                     case Disease.UNCURED:
-                        uncuredString = uncuredString+"\n"+((PandemicGameState) info).getDiseases()[i].getName();
+                        uncuredString += ((PandemicGameState) info).getDiseases()[i].getName() + "\n";
                         break;
                     case Disease.ERADICATED:
-                        eradicatedString = eradicatedString+"\n"+((PandemicGameState) info).getDiseases()[i].getName();
+                        eradicatedString += ((PandemicGameState) info).getDiseases()[i].getName() + "\n";
                         break;
                 }
             }
 
-            uncuredDiseases.setText("UNCURED: \n" + uncuredString);
-            curedDiseases.setText("CURED: \n" + curedString);
-            eradicatedDiseases.setText("ERADICATED: \n" + eradicatedString);
+            this.uncuredDiseases.setText("UNCURED: \n" + uncuredString);
+            this.curedDiseases.setText("CURED: \n" + curedString);
+            this.eradicatedDiseases.setText("ERADICATED: \n" + eradicatedString);
 
+            // update all of the current player cards
+            String allCards = "";
+
+            for(int i = 0; i < ((PandemicGameState) info).getNumPlayers(); i++) {
+                allCards += "PLAYER " + (i + 1) + "\n";
+                for (int j = 0; j < (PandemicGameState.HAND_LIMIT + 1); j++) {
+                    if(!((PandemicGameState) info).getPlayerHand()[i][j].getName().equals("NULL")) {
+                        allCards += ((PandemicGameState) info).getPlayerHand()[i][j].getName() + "\n";
+                    }
+                }
+                allCards += "\n";
+            }
+
+            this.playerCards.setText(allCards);
+
+            // update status bar on the top
+            this.infoBar.setText("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) + "'S TURN");
+            if(((PandemicGameState) info).needToDiscard()) {
+                this.infoBar.setText("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) + ": PLEASE DISCARD A CARD");
+            }
+
+            // update hand
+            this.updateCard(0, info, this.card1);
+            this.updateCard(1, info, this.card2);
+            this.updateCard(2, info, this.card3);
+            this.updateCard(3, info, this.card4);
+            this.updateCard(4, info, this.card5);
+            this.updateCard(5, info, this.card6);
+            this.updateCard(6, info, this.card7);
+            this.updateCard(7, info, this.card8);
+
+            // update variables for the map view
+            this.mapView.setCities(((PandemicGameState) info).getCities());
+            this.mapView.setCurrCity(((PandemicGameState) info).getCurrCity());
+            this.mapView.invalidate();
         }
+    }
+
+    public void updateCard(int num, GameInfo info, Button card) {
+        card.setVisibility(View.VISIBLE);
+        if(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).getCurrPlayer()][num].getName().equals("NULL")) {
+            card.setVisibility(View.GONE);
+            return;
+        }
+        card.setText(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).getCurrPlayer()][num].getName());
     }
 
     @Override
@@ -198,6 +233,7 @@ View.OnTouchListener {
 
         activity.setContentView(R.layout.pandemic_human_player);
 
+        // GUI elements
         this.driveButton = activity.findViewById(R.id.drivebutton);
         this.directButton = activity.findViewById(R.id.directbutton);
         this.charterButton = activity.findViewById(R.id.charterbutton);
@@ -230,8 +266,11 @@ View.OnTouchListener {
         this.uncuredDiseases = activity.findViewById(R.id.uncureddiseases);
         this.curedDiseases = activity.findViewById(R.id.cureddiseases);
         this.eradicatedDiseases = activity.findViewById(R.id.eradicateddiseases);
+        this.actionsLeft = activity.findViewById(R.id.actionsleft);
+        this.playerCards = activity.findViewById(R.id.allcards);
         this.mapView = activity.findViewById(R.id.mapview);
 
+        // set up listeners
         this.driveButton.setOnClickListener(this);
         this.directButton.setOnClickListener(this);
         this.charterButton.setOnClickListener(this);
@@ -251,35 +290,49 @@ View.OnTouchListener {
         this.card6.setOnClickListener(this);
         this.card7.setOnClickListener(this);
         this.card8.setOnClickListener(this);
+
+        this.mapView.setOnTouchListener(this);
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        // get the coordinate of the touch
         float x = event.getX();
         float y = event.getY();
 
+        // if touch does not correspond to a city
+        if(this.determineCity(x, y) == null) {
+            return false;
+        }
+        infoBar.setText(this.determineCity(x, y).getName().toUpperCase() + " CHOSEN");
+
+        // check if a move action was initialized. if so, complete that action.
         if(this.driveFerry != null) {
             this.driveFerry.setEndCity(this.determineCity(x, y));
             this.game.sendAction(this.driveFerry);
             this.driveFerry = null;
+            this.mapView.invalidate();
             return true;
         }
         else if(this.directFlight != null) {
             this.directFlight.setEndCity(this.determineCity(x, y));
             this.game.sendAction(this.directFlight);
             this.directFlight = null;
+            this.mapView.invalidate();
             return true;
         }
         else if(this.charterFlight != null) {
             this.charterFlight.setEndCity(this.determineCity(x, y));
             this.game.sendAction(this.charterFlight);
             this.charterFlight = null;
+            this.mapView.invalidate();
             return true;
         }
         else if(this.shuttleFlight != null) {
             this.shuttleFlight.setEndCity(this.determineCity(x, y));
             this.game.sendAction(this.shuttleFlight);
             this.shuttleFlight = null;
+            this.mapView.invalidate();
             return true;
         }
 
@@ -287,6 +340,7 @@ View.OnTouchListener {
     }
 
     public City determineCity(float x, float y) {
+        // go through each city and see if the coordinate falls within the city's parameters
         for(int i = 0; i < this.cities.getAllCities().length; i++) {
             if(x >= this.cities.getAllCities()[i].getLocation()[0][0] &&
                y >= this.cities.getAllCities()[i].getLocation()[0][1] &&

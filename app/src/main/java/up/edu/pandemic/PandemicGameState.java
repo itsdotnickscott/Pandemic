@@ -35,10 +35,9 @@ public class PandemicGameState extends GameState {
     public static final int BUILD = 5;
     public static final int SHARE = 6;
     public static final int CURE = 7;
-    public static final int DISCARD = 8;
-    public static final int PASS = 9;
-    public static final int END_TURN = 10;
-    public static final int NUM_TYPE_OF_ACTIONS = 11;
+    public static final int PASS = 8;
+    public static final int END_TURN = 9;
+    public static final int NUM_TYPE_OF_ACTIONS = 10;
 
     // instance variables
     private Disease[] diseases;
@@ -48,6 +47,7 @@ public class PandemicGameState extends GameState {
 
     private int numPlayers;
     private int currPlayer;
+
     private int actionsLeft;
     private boolean needToDiscard;
     private int drawCardsLeft;
@@ -73,7 +73,7 @@ public class PandemicGameState extends GameState {
         }
 
         // starting game parameters
-        this.outbreaks = MAX_OUTBREAKS;
+        this.outbreaks = 0;
         this.infRate = STARTING_RATE;
         this.stationsLeft = MAX_STATIONS;
         this.epiLeft = NUM_EPIDEMICS;
@@ -81,7 +81,7 @@ public class PandemicGameState extends GameState {
         // choose starting player at random
         Random rng = new Random();
         this.numPlayers = num;
-        this.currPlayer = rng.nextInt(numPlayers);
+        this.currPlayer = 0; //rng.nextInt(numPlayers);
         this.actionsLeft = NUM_ACTIONS;
         this.needToDiscard = false;
         this.drawCardsLeft = NUM_DRAW_CARDS;
@@ -89,8 +89,8 @@ public class PandemicGameState extends GameState {
         this.cities = new Board();
 
         // make the decks, initialize so they contain the same set of cities
-        this.infectionDeck = new Deck(this.cities.getAllCities(), rng);
-        this.playerDeck = new Deck(this.cities.getAllCities(), rng);
+        this.infectionDeck = new Deck(this.cities.getAllCities());
+        this.playerDeck = new Deck(this.cities.getAllCities());
 
         // initialize player hands, the max cards are hand limit + 1 in the case of getting an
         // eighth card, then the player will be prompted to discard before getting any more cards
@@ -99,11 +99,11 @@ public class PandemicGameState extends GameState {
         this.currCity = new City[this.numPlayers];
         // the players start at the CDC in Atlanta
         for(int i = 0; i < this.numPlayers; i++) {
-            this.currCity[i] = this.playerDeck.getCity("Atlanta");
+            this.currCity[i] = this.cities.getCity("Atlanta");
         }
 
         // build CDC
-        this.playerDeck.getCity("Atlanta").buildStation();
+        this.cities.getCity("Atlanta").buildStation();
         this.stationsLeft--;
 
         // determine how many cards are dealt out at the start
@@ -125,6 +125,16 @@ public class PandemicGameState extends GameState {
             }
             for(int j = deal; j < HAND_LIMIT + 1; j++) {
                 this.playerHands[i][j] = empty;
+            }
+        }
+
+        // infect starting cities
+        for(int i = 3; i > 0; i--) {
+            for(int j = 0; j < 3; j++) {
+                City infect = this.infectionDeck.draw();
+                for(int k = i; k > 0; k--) {
+                    infect.infectCity(this.diseases);
+                }
             }
         }
 
@@ -157,6 +167,7 @@ public class PandemicGameState extends GameState {
 
         this.infectionDeck = new Deck(orig.infectionDeck);
         this.playerDeck = new Deck(orig.playerDeck);
+        this.cities = new Board(orig.cities);
 
         this.playerHands = new City[this.numPlayers][HAND_LIMIT + 1];
         for(int i = 0; i < this.numPlayers; i++) {
@@ -197,6 +208,90 @@ public class PandemicGameState extends GameState {
         return this.needToDiscard;
     } // needToDiscard()
 
+    /** driveFerry()
+     * This method performs the Drive/Ferry action, which moves a player to an adjacent connected
+     * city.
+     * @param player The player that performed this action.
+     * @param newCity The city the player is trying to go to.
+     * @return Whether the action was valid.
+     */
+    public boolean driveFerry(int player, City newCity) {
+        if(!this.checkDoableActions(player)[DRIVE_FERRY]) {
+            return false;
+        }
+
+        for(int i = 0; i < this.currCity[player].getConnections().length; i++){
+            // check if the current city is adjacent to the new city
+            if(this.currCity[player].getConnections()[i].getName().equals(newCity.getName())) {
+                this.currCity[player] = this.cities.getCity(newCity.getName());
+                this.actionsLeft--;
+                return true;
+            }
+        }
+        return false;
+    } // driveFerry()
+
+    /** directFlight()
+     * This method performs the Direct Flight action, which moves a player to the city of a card
+     * they discarded.
+     * @param player The player that performed this action.
+     * @param newCity The city the player discarded in order to go to it.
+     * @return Whether the action was valid.
+     */
+    public boolean directFlight(int player, City newCity) {
+        if(!this.checkDoableActions(player)[DIRECT_FLIGHT]) {
+            return false;
+        }
+
+        // makes sure the player has the card, then discard it and move the player
+        if(this.hasCard(player, newCity)) {
+            this.currCity[player] = this.cities.getCity(newCity.getName());
+            this.discard(player, newCity, true);
+            this.actionsLeft--;
+            return true;
+        }
+        return false;
+    } // directFlight()
+
+    /** charterFlight()
+     * This method performs the Charter Flight action, which moves a player to any city on the board
+     * if they discard the card of the city they are in.
+     * @param player The player that performed this action.
+     * @param newCity The city the player is trying to go to.
+     * @return Whether the action was valid.
+     */
+    public boolean charterFlight(int player, City newCity) {
+        if(!this.checkDoableActions(player)[CHARTER_FLIGHT]) {
+            return false;
+        }
+
+        this.discard(player, this.currCity[player], true);
+        this.currCity[player] = this.cities.getCity(newCity.getName());
+        this.actionsLeft--;
+        return true;
+    } // charterFlight()
+
+    /** shuttleFlight()
+     * This method performs the Shuttle Flight action, which moves a player between two research
+     * stations.
+     * @param player The player that performed the action.
+     * @param newCity The city the player is trying to go to.
+     * @return Whether the action was valid.
+     */
+    public boolean shuttleFlight(int player, City newCity) {
+        if (!this.checkDoableActions(player)[SHUTTLE_FLIGHT]) {
+            return false;
+        }
+
+        //check if both locations have a research station, if so, move them
+        if (currCity[player].hasStation() && newCity.hasStation()) {
+            this.currCity[player] = this.cities.getCity(newCity.getName());
+            this.actionsLeft--;
+            return true;
+        }
+        return false;
+    } // shuttleFlight()
+
     /** treat()
      * This method performs the "treat disease" action, which removes a disease cube from the
      * location of the current player.
@@ -204,7 +299,7 @@ public class PandemicGameState extends GameState {
      * @return Whether the action was valid.
      */
     public boolean treat(int player) {
-        if (this.checkDoableActions(player)[TREAT]) {
+        if (!this.checkDoableActions(player)[TREAT]) {
             return false;
         }
 
@@ -221,91 +316,6 @@ public class PandemicGameState extends GameState {
         return false;
     } // treat()
 
-    /** driveFerry()
-     * This method performs the Drive/Ferry action, which moves a player to an adjacent connected
-     * city.
-     * @param player The player that performed this action.
-     * @param newCity The city the player is trying to go to.
-     * @return Whether the action was valid.
-     */
-    public boolean driveFerry(int player, City newCity) {
-        if(this.checkDoableActions(player)[DRIVE_FERRY]) {
-            return false;
-        }
-
-        for(int i = 0; i < this.currCity[player].getConnections().length; i++){
-            // check if the current city is adjacent to the new city
-            if(this.currCity[player].getConnections()[i] == newCity){
-                this.currCity[player] = newCity;
-                this.actionsLeft--;
-                return true;
-            }
-        }
-        return false;
-    } // driveFerry()
-
-    /** directFlight()
-     * This method performs the Direct Flight action, which moves a player to the city of a card
-     * they discarded.
-     * @param player The player that performed this action.
-     * @param newCity The city the player discarded in order to go to it.
-     * @return Whether the action was valid.
-     */
-    public boolean directFlight(int player, City newCity) {
-        if(this.checkDoableActions(player)[DIRECT_FLIGHT]) {
-            return false;
-        }
-
-        // makes sure the player has the card, then discard it and move the player
-        if(this.hasCard(player, newCity)) {
-            this.currCity[player] = newCity;
-            this.discard(player, newCity);
-            this.actionsLeft--;
-            return true;
-        }
-        return false;
-    } // directFlight()
-
-    /** charterFlight()
-     * This method performs the Charter Flight action, which moves a player to any city on the board
-     * if they discard the card of the city they are in.
-     * @param player The player that performed this action.
-     * @param newCity The city the player is trying to go to.
-     * @return Whether the action was valid.
-     */
-    public boolean charterFlight(int player, City newCity) {
-        if(this.checkDoableActions(player)[CHARTER_FLIGHT]) {
-            return false;
-        }
-
-        this.discard(player, this.currCity[player]);
-        this.currCity[player] = newCity;
-        this.actionsLeft--;
-        return true;
-
-    } // charterFlight()
-
-    /** shuttleFlight()
-     * This method performs the Shuttle Flight action, which moves a player between two research
-     * stations.
-     * @param player The player that performed the action.
-     * @param newCity The city the player is trying to go to.
-     * @return Whether the action was valid.
-     */
-    public boolean shuttleFlight(int player, City newCity) {
-        if (this.checkDoableActions(player)[SHUTTLE_FLIGHT]) {
-            return false;
-        }
-
-        //check if both locations have a research station, if so, move them
-        if (currCity[player].hasStation() && newCity.hasStation()) {
-            this.currCity[player] = newCity;
-            this.actionsLeft--;
-            return true;
-        }
-        return false;
-    } // shuttleFlight()
-
     /** buildStation()
      * This method performs the Build Research Station action, which builds a research station if
      * the player discards the city that they are currently in.
@@ -313,17 +323,17 @@ public class PandemicGameState extends GameState {
      * @return Whether the action was valid.
      */
     public boolean buildStation(int player) {
-        if (this.checkDoableActions(player)[BUILD]) {
+        if (!this.checkDoableActions(player)[BUILD]) {
             return false;
         }
 
         // gets the city the player is in
         City curr = this.currCity[player];
         // checks to see if ... a) there are stations left, and b) the player has that card
-        if (this.stationsLeft > 0 && this.hasCard(player, curr)) {
+        if(this.stationsLeft > 0 && this.hasCard(player, curr)) {
             // attempts to build a station, then discard card
             if(curr.buildStation()) {
-                this.discard(player, this.currCity[player]);
+                this.discard(player, this.currCity[player], true);
                 this.stationsLeft--;
                 this.actionsLeft--;
                 return true;
@@ -332,76 +342,6 @@ public class PandemicGameState extends GameState {
         return false;
     } // buildStation()
 
-    /** forgoAction()
-     * This method removes an action from the current player, if they choose to do so.
-     * @param player The player that performed the action.
-     * @return Whether the action was valid.
-     */
-    public boolean forgoAction(int player) {
-        if(this.checkDoableActions(player)[PASS]) {
-            return false;
-        }
-
-        this.actionsLeft--;
-        return true;
-
-    } // forgoAction()
-
-    /** discard()
-     * This method removes a certain card from a player's hand, usually to perform actions or to
-     * satisfy the hand limit.
-     * @param player The player who is discarding a card.
-     * @param disCity The city card they are trying to discard.
-     * @return Whether the action was valid.
-     */
-    public boolean discard(int player, City disCity){
-        if(player != this.currPlayer) {
-            return false;
-        }
-
-        // this NULL city represents an "empty" slot in a player's hand
-        City empty = new City(City.NULL);
-
-        if(hasCard(player, disCity)) {
-            // finds the index of the card to discard and make it "empty"
-            for(int i = 0; i < playerHands[player].length; i++) {
-                if(playerHands[player][i].getName().equals(disCity.getName())) {
-                    playerHands[player][i] = empty;
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    } // discard()
-
-    /** discardToCure()
-     * This is a helper method which is called when a player cures a disease. It removes five cards
-     * from their hand of the same color.
-     * @param player The player that has cured the disease.
-     * @param color The disease that is being cured.
-     * @return Whether the discard was valid.
-     */
-    public boolean discardToCure(int player, int color) {
-        // this NULL city represents an "empty" slot in a player's hand
-        City empty = new City(City.NULL);
-
-        int count = 0;
-        if(player == this.currPlayer) {
-            for(int i = 0; i < playerHands[player].length; i++) {
-                if(playerHands[player][i].getColor() == color && count != REQUIRED_CARDS_CURE) {
-                    playerHands[player][i] = empty;
-                    count++;
-                }
-            }
-            this.diseases[color].cure();
-            this.actionsLeft--;
-            this.gameWon();
-            return true;
-        }
-        return false;
-    } // discardToCure()
-
     /** share()
      * This method performs the Share Knowledge action, which either gives or takes a city card of
      * two players that are in the same city.
@@ -409,7 +349,7 @@ public class PandemicGameState extends GameState {
      * @return Whether the action was valid.
      */
     public boolean share(int player) {
-        if(this.checkDoableActions(player)[SHARE]) {
+        if(!this.checkDoableActions(player)[SHARE]) {
             return false;
         }
 
@@ -443,49 +383,118 @@ public class PandemicGameState extends GameState {
      * @return Whether the action was valid.
      */
     public boolean cure(int player) {
-        if(this.checkDoableActions(player)[CURE]) {
+        if(!this.checkDoableActions(player)[CURE]) {
             return false;
         }
 
-        // counters for cards
-        int blue = 0;
-        int yellow = 0;
-        int black = 0;
-        int red = 0;
-        // go through the player hand and determine which disease can be cured, if any
-        for(int i = 0; i < this.playerHands[player].length; i++) {
-            if(!this.playerHands[player][i].getName().equals("NULL")) {
-                switch(this.playerHands[player][i].getColor()) {
-                    // 1) increments counter of cards, 2) if there are five cards, successful cure
-                    case Disease.BLUE:
-                        blue++;
-                        if(blue == 5) {
-                            return this.discardToCure(player, Disease.BLUE);
-                        }
-                        break;
-                    case Disease.YELLOW:
-                        yellow++;
-                        if(yellow == 5) {
-                            return this.discardToCure(player, Disease.YELLOW);
-                        }
-                        break;
-                    case Disease.BLACK:
-                        black++;
-                        if(black == 5) {
-                            return this.discardToCure(player, Disease.BLACK);
-                        }
-                        break;
-                    case Disease.RED:
-                        red++;
-                        if(red == 5) {
-                            return this.discardToCure(player, Disease.RED);
-                        }
-                        break;
-                }
-            }
+        if(this.countFiveCards() != -1) {
+            this.discardToCure(this.countFiveCards());
         }
         return false;
     } // cure()
+
+    /** discardToCure()
+     * This is a helper method which is called when a player cures a disease. It removes five cards
+     * from their hand of the same color.
+     * @param color The disease that is being cured.
+     * @return Whether the discard was valid.
+     */
+    public void discardToCure(int color) {
+        int count = 0;
+        for(int i = 0; i < playerHands[this.currPlayer].length; i++) {
+            if(playerHands[this.currPlayer][i].getColor() == color && count != REQUIRED_CARDS_CURE) {
+                this.discard(this.currPlayer, playerHands[this.currPlayer][i], true);
+                count++;
+            }
+        }
+        this.diseases[color].cure();
+        this.actionsLeft--;
+        this.gameWon();
+    } // discardToCure()
+
+    /** forgoAction()
+     * This method removes an action from the current player, if they choose to do so.
+     * @param player The player that performed the action.
+     * @return Whether the action was valid.
+     */
+    public boolean forgoAction(int player) {
+        if(!this.checkDoableActions(player)[PASS]) {
+            return false;
+        }
+
+        this.actionsLeft--;
+        return true;
+
+    } // forgoAction()
+
+    /** endTurn()
+     * This method performs the End Turn action, which will carry out the rest of the player's turn,
+     * including drawing two city cards and drawing infection cards.
+     * @param player The player that performed the action.
+     * @return Whether the action was valid.
+     */
+    public boolean endTurn(int player) {
+        if(!this.checkDoableActions(player)[END_TURN]) {
+            return false;
+        }
+
+        if(this.actionsLeft == 0) {
+            while(this.drawCardsLeft != 0) {
+                if(!drawCard()) {
+                    return false;
+                }
+                this.drawCardsLeft--;
+            }
+            // if it gets to here, the player has successfully drawn two cards.
+            this.drawCardsLeft = NUM_DRAW_CARDS;
+            this.drawInfectionCards();
+
+            // continue to next player
+            this.currPlayer = ++this.currPlayer % this.numPlayers;
+            this.actionsLeft = NUM_ACTIONS;
+            return true;
+        }
+        else {
+            return false;
+        }
+    } // endTurn()
+
+    /** discard()
+     * This method removes a certain card from a player's hand, usually to perform actions or to
+     * satisfy the hand limit.
+     * @param player The player who is discarding a card.
+     * @param disCity The city card they are trying to discard.
+     * @return Whether the action was valid.
+     */
+    public boolean discard(int player, City disCity, boolean override){
+        if(!override && !this.needToDiscard()) {
+            return false;
+        }
+
+        // this NULL city represents an "empty" slot in a player's hand
+        City empty = new City(City.NULL);
+
+        if(hasCard(player, disCity)) {
+            // finds the index of the card to discard and make it "empty"
+            for(int i = 0; i < playerHands[player].length; i++) {
+                if(playerHands[player][i].getName().equals(disCity.getName())) {
+                    playerHands[player][i] = empty;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    } // discard()
+
+    public boolean discard(int player, String cityName) {
+        for(int i = 0; i < playerHands[player].length; i++) {
+            if(playerHands[player][i].getName().equals(cityName)) {
+                return discard(player, playerHands[player][i], false);
+            }
+        }
+        return false;
+    } // discard()
 
     /** swapCards()
      * This is a helper method which transfers cards, and appropriately replaces it with an "empty"
@@ -520,46 +529,15 @@ public class PandemicGameState extends GameState {
      * @return Whether the player has that city card.
      */
     public boolean hasCard(int player, City card) {
-        // check if the player has the new city card in their hand
+        // check if the player has the city card in their hand
         for(int i = 0; i < this.playerHands[player].length; i++) {
-            if(this.playerHands[player][i] == card) {
+            if(this.playerHands[player][i].getName().equals(card.getName()) &&
+                    !this.playerHands[player][i].getName().equals("NULL")) {
                 return true;
             }
         }
         return false;
     } // hasCard()
-
-    /** endTurn()
-     * This method performs the End Turn action, which will carry out the rest of the player's turn,
-     * including drawing two city cards and drawing infection cards.
-     * @param player The player that performed the action.
-     * @return Whether the action was valid.
-     */
-    public boolean endTurn(int player) {
-        if(this.checkDoableActions(player)[END_TURN]) {
-            return false;
-        }
-
-        if(this.actionsLeft == 0) {
-            while(this.drawCardsLeft != 0) {
-                if(!drawCard()) {
-                    return false;
-                }
-                this.drawCardsLeft--;
-            }
-            // if it gets to here, the player has successfully drawn two cards.
-            this.drawCardsLeft = NUM_DRAW_CARDS;
-            this.drawInfectionCards();
-
-            // continue to next player
-            this.currPlayer = ++this.currPlayer % this.numPlayers;
-            this.actionsLeft = NUM_ACTIONS;
-            return true;
-        }
-        else {
-            return false;
-        }
-    } // endTurn()
 
     /** drawCard()
      *  This method draws a city card for the player and adds it into their hand.
@@ -601,7 +579,7 @@ public class PandemicGameState extends GameState {
         // step 2) infect: draw bottom card, infect that city at max
         City epidemic = this.infectionDeck.drawBottomCard();
         for(int i = 0; i < City.MAX_CUBES; i++) {
-            if (epidemic.infectCity(this.diseases)) {
+            if(epidemic.infectCity(this.diseases)) {
                 this.outbreaks++;
                 i = City.MAX_CUBES;
             }
@@ -660,6 +638,49 @@ public class PandemicGameState extends GameState {
         this.gameCondition = WIN;
     } // gameWon()
 
+    public int countFiveCards() {
+        // counters for cards
+        int blue = 0;
+        int yellow = 0;
+        int black = 0;
+        int red = 0;
+        // go through the player hand and determine which disease can be cured
+        for(int i = 0; i < this.playerHands[this.currPlayer].length; i++) {
+            if(!this.playerHands[this.currPlayer][i].getName().equals("NULL")) {
+                switch(this.playerHands[this.currPlayer][i].getColor()) {
+                    // count cards
+                    case Disease.BLUE:
+                        blue++;
+                        if(blue == 5) {
+                            return Disease.BLUE;
+                        }
+                        break;
+                    case Disease.YELLOW:
+                        yellow++;
+                        if(yellow == 5) {
+                            return Disease.YELLOW;
+                        }
+                        break;
+                    case Disease.BLACK:
+                        black++;
+                        if(black == 5) {
+                             return Disease.BLACK;
+                        }
+                        break;
+                    case Disease.RED:
+                        red++;
+                        if(red == 5) {
+                            return Disease.RED;
+                        }
+                        break;
+                }
+            }
+        }
+
+        // if it gets here, not enough cards were found of one color
+        return -1;
+    }
+
     /** checkDoableActions()
      * This method checks to see what actions can be performed; not necessarily if they are valid.
      * @param player The player that is performing the action.
@@ -683,7 +704,6 @@ public class PandemicGameState extends GameState {
                     }
                 }
             }
-
             if(!this.needToDiscard()) {
                 if(this.actionsLeft != 0) {
                     // if there are actions left, a player can always use the drive/ferry action
@@ -731,47 +751,13 @@ public class PandemicGameState extends GameState {
                     // checks to see if there's a research station
                     if(this.currCity[this.currPlayer].hasStation()) {
                         // and if there are at least two research stations
-                        if (!(this.stationsLeft > 6)) {
+                        if(this.stationsLeft < 5) {
                             canDo[SHUTTLE_FLIGHT] = true;
                         }
 
                         // and if the current player has five cards of the same color
-                        // counters for cards
-                        int blue = 0;
-                        int yellow = 0;
-                        int black = 0;
-                        int red = 0;
-                        // go through the player hand and determine which disease can be cured
-                        for(int i = 0; i < this.playerHands[player].length; i++) {
-                            if(!this.playerHands[player][i].getName().equals("NULL")) {
-                                switch(this.playerHands[player][i].getColor()) {
-                                    // count cards
-                                    case Disease.BLUE:
-                                        blue++;
-                                        if(blue == 5) {
-                                            canDo[CURE] = true;
-                                        }
-                                        break;
-                                    case Disease.YELLOW:
-                                        yellow++;
-                                        if(yellow == 5) {
-                                            canDo[CURE] = true;
-                                        }
-                                        break;
-                                    case Disease.BLACK:
-                                        black++;
-                                        if(black == 5) {
-                                            canDo[CURE] = true;
-                                        }
-                                        break;
-                                    case Disease.RED:
-                                        red++;
-                                        if(red == 5) {
-                                            canDo[CURE] = true;
-                                        }
-                                        break;
-                                }
-                            }
+                        if(this.countFiveCards() != -1) {
+                            canDo[CURE] = true;
                         }
                     }
 
@@ -785,10 +771,6 @@ public class PandemicGameState extends GameState {
                     canDo[END_TURN] = true;
                 }
             }
-            // if player needs to discard, that is the only action they can do
-            else {
-                canDo[DISCARD] = true;
-            }
         }
 
         return canDo;
@@ -797,14 +779,6 @@ public class PandemicGameState extends GameState {
     /** getDeck()
      * @return The player deck.
      */
-    public Deck getDeck() {
-        return this.playerDeck;
-    } // getDeck()
-
-    public boolean chooseCity(int player, City city) {
-        return false;
-    } // chooseCity()
-
     public Disease[] getDiseases() {
         return diseases;
     }
@@ -817,40 +791,8 @@ public class PandemicGameState extends GameState {
         return infRate;
     }
 
-    public int getStationsLeft() {
-        return stationsLeft;
-    }
-
-    public int getNumPlayers() {
-        return numPlayers;
-    }
-
     public int getCurrPlayer() {
         return currPlayer;
-    }
-
-    public int getActionsLeft() {
-        return actionsLeft;
-    }
-
-    public boolean isNeedToDiscard() {
-        return needToDiscard;
-    }
-
-    public int getDrawCardsLeft() {
-        return drawCardsLeft;
-    }
-
-    public City[][] getPlayerHands() {
-        return playerHands;
-    }
-
-    public City[] getCurrCity() {
-        return currCity;
-    }
-
-    public Deck getInfectionDeck() {
-        return infectionDeck;
     }
 
     public Deck getPlayerDeck() {
@@ -863,6 +805,26 @@ public class PandemicGameState extends GameState {
 
     public int getGameCondition() {
         return gameCondition;
+    }
+
+    public Board getCities() {
+        return cities;
+    }
+
+    public City[] getCurrCity() {
+        return currCity;
+    }
+
+    public int getActionsLeft() {
+        return actionsLeft;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+
+    public City[][] getPlayerHand() {
+        return playerHands;
     }
 
     @NonNull

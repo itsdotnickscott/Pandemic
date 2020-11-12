@@ -23,6 +23,7 @@ public class City {
     private int cubes;
     private City[] connections;
     private boolean hasStation;
+    private boolean hasOutbroke;
 
     /** City()
      * This constructor will create a special City Card: either an EPIDEMIC or a NULL card.
@@ -49,6 +50,7 @@ public class City {
         this.location = loc;
         this.cubes = 0;
         this.hasStation = false;
+        this.hasOutbroke = false;
     } // City()
 
     /** City()
@@ -62,6 +64,7 @@ public class City {
         this.cubes = orig.cubes;
         this.setConnections(orig.connections);
         this.hasStation = orig.hasStation;
+        this.hasOutbroke = orig.hasOutbroke;
     } // City()
 
     /** setConnections()
@@ -90,7 +93,7 @@ public class City {
      * @return Whether this action is valid.
      */
     public boolean buildStation() {
-        if(this.hasStation == false) {
+        if(!this.hasStation) {
             this.hasStation = true;
             return true;
         }
@@ -148,9 +151,13 @@ public class City {
      * @param diseases An array of diseases.
      */
     public void outbreak(Disease[] diseases) {
+        this.hasOutbroke = true;
         for(int i = 0; i < this.connections.length; i++) {
-            this.connections[i].infectCity(diseases);
+            if(!this.connections[i].hasOutbroke) {
+                this.connections[i].infectCity(diseases);
+            }
         }
+        this.hasOutbroke = false;
     } // outbreak()
 
     /** getLocation()

@@ -28,7 +28,7 @@
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="19"
+            android:text="24"
             android:textAllCaps="false"
             android:textColor="#ECE2E2" />
 
@@ -56,7 +56,7 @@
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="21"
+            android:text="24"
             android:textAllCaps="false"
             android:textColor="#ECE2E2" />
 
@@ -70,7 +70,7 @@
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="20"
+            android:text="24"
             android:textAllCaps="false"
             android:textColor="#ECE2E2" />
 
@@ -84,7 +84,7 @@
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="Player 2's Turn."
+            android:text="INFO BAR"
             android:textColor="#EFE8E8" />
 
         <TextView
@@ -97,7 +97,7 @@
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="Infection Rate: 3"
+            android:text="INFECTION RATE"
             android:textColor="#ECE1E1" />
 
         <TextView
@@ -110,7 +110,7 @@
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="Turns Left: 10"
+            android:text="TURNS LEFT"
             android:textColor="#FFFFFF" />
 
         <TextView
@@ -123,7 +123,7 @@
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="Epidemics Left: 2"
+            android:text="EPIDEMICS LEFT"
             android:textColor="#FFFFFF" />
 
     </LinearLayout>
@@ -148,7 +148,7 @@
                 android:id="@+id/outbreakcounter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="OUTBREAKS: 4"
+                android:text="OUTBREAKS"
                 android:textColor="#E8DFDF" />
 
             <Space
@@ -161,7 +161,7 @@
                 android:id="@+id/uncureddiseases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Blue, Black"
+                android:text="UNCURED"
                 android:textColor="#E8DFDF" />
 
             <Space
@@ -174,7 +174,7 @@
                 android:id="@+id/cureddiseases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Yellow"
+                android:text="CURED"
                 android:textColor="#E8DFDF" />
 
             <Space
@@ -187,7 +187,7 @@
                 android:id="@+id/eradicateddiseases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Red"
+                android:text="ERADICATED"
                 android:textColor="#E8DFDF" />
 
             <Space
@@ -224,78 +224,50 @@
                     android:id="@+id/card1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="#3F51B5"
-                    android:padding="5dp"
-                    android:text="ATLANTA"
-                    android:textColor="#FFFFFF" />
+                    android:text="CARD" />
 
                 <Button
                     android:id="@+id/card2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="#3F51B5"
-                    android:padding="5dp"
-                    android:text="WASHINGTON"
-                    android:textColor="#FFFFFF" />
+                    android:text="CARD" />
 
                 <Button
                     android:id="@+id/card3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="#000000"
-                    android:padding="5dp"
-                    android:text="KARACHI"
-                    android:textColor="#FFFFFF" />
+                    android:text="CARD" />
 
                 <Button
                     android:id="@+id/card4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="#000000"
-                    android:padding="5dp"
-                    android:text="CAIRO"
-                    android:textColor="#FFFFFF" />
+                    android:text="CARD" />
 
                 <Button
                     android:id="@+id/card5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="#FF9800"
-                    android:padding="5dp"
-                    android:text="SAO PAULO"
-                    android:textColor="#FFFFFF" />
+                    android:text="CARD" />
 
                 <Button
                     android:id="@+id/card6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="#EF0909"
-                    android:padding="5dp"
-                    android:text="BEIJING"
-                    android:textColor="#FFFFFF" />
+                    android:text="CARD" />
 
                 <Button
                     android:id="@+id/card7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="#EF0909"
-                    android:padding="5dp"
-                    android:text="TOKYO"
-                    android:textColor="#FFFFFF" />
+                    android:text="CARD" />
 
                 <Button
                     android:id="@+id/card8"
@@ -317,7 +289,7 @@
                 android:id="@+id/allcards"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Player's Cards\n\nPlayer 1\nLos Angeles\nChicago\nMiami\n\nPlayer 2\nAtlanta\nWashington\nKarachi\nCairo\nSau Paulo\nBeijing\nTokyo"
+                android:text="PLAYER CARDS"
                 android:textColor="#E8DCDC" />
         </LinearLayout>
     </LinearLayout>

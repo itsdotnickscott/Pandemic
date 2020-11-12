@@ -18,4 +18,8 @@ public class DriveFerryAction extends GameAction {
     public void setEndCity(City endCity) {
         this.endCity = endCity;
     }
+
+    public City getEndCity() {
+        return endCity;
+    }
 }

@@ -30,7 +30,7 @@ public class PandemicMainActivity extends GameMainActivity {
         // a computer player type (player type 1)
         playerTypes.add(new GamePlayerType("Computer Player") {
             public GamePlayer createPlayer(String name) {
-                return new PandemicComputerPlayer(name);
+                return new PandemicDumbAI(name);
             }});
 
         // Create a game configuration class for Counter:

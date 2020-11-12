@@ -127,7 +127,29 @@ public class Board {
                 hoChiMinhCity, manila, jakarta, sydney};
     }
 
+    public Board(Board orig) {
+        this.allCities = new City[NUM_CITIES];
+        for(int i = 0; i < NUM_CITIES; i++) {
+            this.allCities[i] = new City(orig.allCities[i]);
+        }
+    }
+
     public City[] getAllCities() {
         return this.allCities;
     }
+
+    /** getCity()
+     * This is a helper method which finds a city in the deck.
+     * @param city The name of the city to find.
+     * @return The city.
+     */
+    public City getCity(String city) {
+        // iterate through the deck until we find the city name
+        for(int i = 0; i < NUM_CITIES; i++) {
+            if(this.allCities[i].getName().equals(city)) {
+                return this.allCities[i];
+            }
+        }
+        return null;
+    } // getCity()
 }

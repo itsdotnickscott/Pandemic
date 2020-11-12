@@ -18,4 +18,8 @@ public class DirectFlightAction extends GameAction {
     public void setEndCity(City endCity) {
         this.endCity = endCity;
     }
+
+    public City getEndCity() {
+        return endCity;
+    }
 }

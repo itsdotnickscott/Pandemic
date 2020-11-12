@@ -16,25 +16,20 @@ public class Deck {
     /** Deck()
      * This constructor initializes the deck, and then shuffles it.
      * @param cards The city cards to put into the deck.
-     * @param rng A random number generator.
      */
-    public Deck(City[] cards, Random rng) {
-        // arbitrary amount of times cards will be swapped (1000 is a high amount, should
-        // shuffle a sufficient number of times
-        int shuffle = 1000;
+    public Deck(City[] cards) {
+        Board temp = new Board();
+        this.deck = temp.getAllCities();
 
-        // randomize the cards by swapping two cards
-        for (int i = 0; i < shuffle; i++) {
-            int card1 = rng.nextInt(cards.length);
-            int card2 = rng.nextInt(cards.length);
+        this.shuffle(this.deck);
 
-            City temp = cards[card1];
-            cards[card1] = cards[card2];
-            cards[card2] = temp;
+        for(int i = 0; i < cards.length; i++) {
+            for(int j = 0; j < this.deck.length; j++) {
+                if(cards[i].getName().equals(this.deck[j].getName())) {
+                    this.deck[j] = cards[i];
+                }
+            }
         }
-
-        // set it to instance deck
-        this.deck = cards;
 
         // currPos starts at -1 so when it first deals, it goes to index 0
         this.currPos = -1;
@@ -49,11 +44,9 @@ public class Deck {
         for(int i = 0; i < orig.deck.length; i++) {
             this.deck[i] = new City(orig.deck[i]);
         }
-    } // Deck()
 
-    public Deck(City[] cities) {
-        this.deck = cities;
-    }
+        this.currPos = orig.currPos;
+    } // Deck()
 
     /** draw()
      * Draws the next card in the deck.
@@ -74,26 +67,103 @@ public class Deck {
      */
     public void insertEpidemics(int numPlayers) {
         City epidemic = new City(City.EPIDEMIC);
+        // temporary decks for a 2 and 4 player game
+        City[] temp1 = new City[9];
+        City[] temp2 = new City[9];
+        City[] temp3 = new City[9];
+        City[] temp4 = new City[9];
+        // temporary deck for a 3 player game
+        City[] temp5;
+        if(numPlayers == 3) {
+            temp5 = new City[8];
+        }
+        else {
+            temp5 = new City[9];
+        }
 
-        if(numPlayers == 2 || numPlayers == 4) {
+        //initialize the first mini stack
+        for(int j = 0; j < 8; j++){
+            temp1[j] = this.deck[j];
+        }
+        temp1[8] = epidemic; //set the last space equal to an epidemic
+        temp1 = shuffle(temp1);
 
+        //stack 2
+        for(int j = 8; j < 16; j++){
+            temp2[j - 8] = this.deck[j];
+        }
+        temp2[8] = epidemic;
+        temp2 = shuffle(temp2);
+
+        //stack 3
+        for(int j = 16; j < 24; j++){
+            temp3[j - 16] = this.deck[j];
+        }
+        temp3[8] = epidemic;
+        temp3 = shuffle(temp3);
+
+        //stack 4
+        for(int j = 24; j < 32; j++){
+            temp4[j - 24] = this.deck[j];
+        }
+        temp4[8] = epidemic;
+        temp4 = shuffle(temp4);
+
+        //stack 5
+        if(numPlayers == 3) {
+            for(int j = 32; j < 39; j++){
+                temp5[j - 32] = this.deck[j];
+            }
+            temp5[7] = epidemic;
+        }
+        else {
+            for (int j = 32; j < 40; j++) {
+                temp5[j - 32] = this.deck[j];
+            }
+            temp5[8] = epidemic;
+        }
+        temp5 = shuffle(temp5);
+
+        //put the newly shuffled decks into the final player deck
+        for(int i = 0; i < this.deck.length; i++){
+            if(i < 9) {
+                this.deck[i] = temp1[i];
+            }
+            else if(i < 18) {
+                this.deck[i] = temp2[i - 9];
+            }
+            else if(i < 27) {
+                this.deck[i] = temp3[i - 18];
+            }
+            else if(i < 36) {
+                this.deck[i] = temp4[i - 27];
+            }
+            else if(i < 45) {
+                if(!(i == 44 && numPlayers == 3)) {
+                    this.deck[i] = temp5[i - 36];
+                }
+            }
         }
     } // insertEpidemics()
 
-    /** getCity()
-     * This is a helper method which finds a city in the deck.
-     * @param city The name of the city to find.
-     * @return The city.
+    /** shuffle()
+     * This is a helper method which shuffles an array.
+     * @param cards an array of City objects.
+     * @return City[] returns the shuffled array.
      */
-    public City getCity(String city) {
-        // iterate through the deck until we find the city name
-        for(int i = 0; i < this.deck.length; i++) {
-            if(this.deck[i].getName().equals(city)) {
-                return this.deck[i];
-            }
+    public City[] shuffle(City[] cards){
+        int shuffle = 1000;
+        Random rng = new Random();
+        // randomize the cards by swapping two cards
+        for (int i = 0; i < shuffle; i++) {
+            int card1 = rng.nextInt(cards.length);
+            int card2 = rng.nextInt(cards.length);
+            City temp = cards[card1];
+            cards[card1] = cards[card2];
+            cards[card2] = temp;
         }
-        return null;
-    } // getCity()
+        return cards;
+    } // shuffle()
 
     /** drawBottomCard()
      * This method is called when an epidemic is pulled, and we need to pull the card on the bottom
