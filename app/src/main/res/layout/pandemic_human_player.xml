@@ -5,219 +5,38 @@
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#818181"
+    android:background="#000000"
     android:orientation="vertical"
     tools:context=".PandemicMainActivity">
-
-    <LinearLayout
-        android:id="@+id/toplayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="#656565"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/blueleft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="5"
-            android:background="#0B6BCF"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="24"
-            android:textAllCaps="false"
-            android:textColor="#ECE2E2" />
-
-        <TextView
-            android:id="@+id/redleft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="5"
-            android:background="#CF0B0B"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="24"
-            android:textAllCaps="false"
-            android:textColor="#ECE2E2" />
-
-        <TextView
-            android:id="@+id/blackleft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="5"
-            android:background="#000000"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="24"
-            android:textAllCaps="false"
-            android:textColor="#ECE2E2" />
-
-        <TextView
-            android:id="@+id/yellowleft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="5"
-            android:background="#C3991C"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="24"
-            android:textAllCaps="false"
-            android:textColor="#ECE2E2" />
-
-        <TextView
-            android:id="@+id/infobar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="35"
-            android:background="#1E4965"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="INFO BAR"
-            android:textColor="#EFE8E8" />
-
-        <TextView
-            android:id="@+id/infrate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="15"
-            android:background="#065E0F"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="INFECTION RATE"
-            android:textColor="#ECE1E1" />
-
-        <TextView
-            android:id="@+id/turnsleft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="15"
-            android:background="#1E4965"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="TURNS LEFT"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:id="@+id/epileft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="15"
-            android:background="#065E0F"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="EPIDEMICS LEFT"
-            android:textColor="#FFFFFF" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/middlelayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="120"
-        android:background="#393939"
+        android:background="#000000"
         android:baselineAligned="false"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/progresslayout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/outbreakcounter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="OUTBREAKS"
-                android:textColor="#E8DFDF" />
-
-            <Space
-                android:id="@+id/space1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/uncureddiseases"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="UNCURED"
-                android:textColor="#E8DFDF" />
-
-            <Space
-                android:id="@+id/space2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/cureddiseases"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CURED"
-                android:textColor="#E8DFDF" />
-
-            <Space
-                android:id="@+id/space3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/eradicateddiseases"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ERADICATED"
-                android:textColor="#E8DFDF" />
-
-            <Space
-                android:id="@+id/space4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/gamelayout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
-            <up.edu.pandemic.PandemicMapView
-                android:id="@+id/mapview"
+            <up.edu.pandemic.PandemicGUIView
+                android:id="@+id/guiview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="10" />
 
             <LinearLayout
-                android:id="@+id/cardslayout"
+                android:id="@+id/playerhand"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:orientation="horizontal">
 
                 <Button
@@ -278,20 +97,14 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/playerslayout"
+        <TextView
+            android:id="@+id/allcards"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:orientation="vertical">
+            android:text="PLAYER CARDS"
+            android:textColor="#E8DCDC" />
 
-            <TextView
-                android:id="@+id/allcards"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="PLAYER CARDS"
-                android:textColor="#E8DCDC" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

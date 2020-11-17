@@ -389,6 +389,7 @@ public class PandemicGameState extends GameState {
 
         if(this.countFiveCards() != -1) {
             this.discardToCure(this.countFiveCards());
+            return true;
         }
         return false;
     } // cure()
