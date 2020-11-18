@@ -8,74 +8,88 @@ public class Board {
 
     public Board() {
         // blue cities
-        City chicago = new City("Chicago", Disease.BLUE, new float[][]{{156.82f, 150.79f}, {295.75f, 288.68f}});
-        City sanFrancisco = new City("San Francisco", Disease.BLUE, new float[][]{{47.88f, 200.75f}, {187.88f, 340.75f}});
-        City montreal = new City("Montreal", Disease.BLUE, new float[][]{{278.76f, 139.80f}, {418.76f, 279.80f}});
-        City newYork = new City("New York", Disease.BLUE, new float[][]{{380.71f, 179.77f}, {520.71f, 319.77f}});
-        City washington = new City("Washington", Disease.BLUE, new float[][]{{329.739f, 257.71f}, {469.73f, 397.71f}});
-        City atlanta = new City("Atlanta", Disease.BLUE, new float[][]{{213.80f, 238.72f}, {353.80f, 378.72f}});
-        City london = new City("London", Disease.BLUE, new float[][]{{609.59f, 97.84f}, {749.59f, 237.84f}});
-        City essen = new City("Essen", Disease.BLUE, new float[][]{{722.53f, 78.85f}, {862.53f, 218.85f}});
-        City stPetersburg = new City("St. Petersburg", Disease.BLUE, new float[][]{{850.46f, 74.86f}, {990.46f, 214.86f}});
-        City madrid = new City("Madrid", Disease.BLUE, new float[][]{{596.60f, 222.73f}, {736.60f, 362.73f}});
-        City paris = new City("Paris", Disease.BLUE, new float[][]{{699.54f, 175.77f}, {839.54f, 315.77f}});
-        City milan = new City("Milan", Disease.BLUE, new float[][]{{791.49f, 163.78f}, {931.49f, 303.78f}});
+        City chicago = new City("Chicago", Disease.BLUE, new float[][]{{333.8261f, 185.81516f}, {473.8261f, 325.81516f}});
+        City sanFrancisco = new City("San Francisco", Disease.BLUE, new float[][]{{221.88443f, 233.7752f}, {361.88443f, 373.7752f}});
+        City montreal = new City("Montreal", Disease.BLUE, new float[][]{{451.7647f, 177.82182f}, {591.7647f, 317.82184f}});
+        City newYork = new City("New York", Disease.BLUE, new float[][]{{554.71106f, 215.79018f}, {694.71106f, 355.79016f}});
+        City washington = new City("Washington", Disease.BLUE, new float[][]{{501.73868f, 290.72772f}, {641.73865f, 430.72772f}});
+        City atlanta = new City("Atlanta", Disease.BLUE, new float[][]{{386.79852f, 268.74606f}, {526.7985f, 408.74606f}});
+        City london = new City("London", Disease.BLUE, new float[][]{{781.5929f, 135.8568f}, {921.5929f, 275.8568f}});
+        City essen = new City("Essen", Disease.BLUE, new float[][]{{894.53406f, 111.87677f}, {1034.534f, 251.87677f}});
+        City stPetersburg = new City("St. Petersburg", Disease.BLUE, new float[][]{{1018.46954f, 107.8801f}, {1158.4695f, 247.8801f}});
+        City madrid = new City("Madrid", Disease.BLUE, new float[][]{{773.59705f, 253.75854f}, {913.59705f, 393.75854f}});
+        City paris = new City("Paris", Disease.BLUE, new float[][]{{872.54553f, 208.796f}, {1012.54553f, 348.79602f}});
+        City milan = new City("Milan", Disease.BLUE, new float[][]{{959.50024f, 194.80766f}, {1099.5002f, 334.80768f}});
 
         // yellow cities
-        City losAngeles = new City("Los Angeles", Disease.YELLOW, new float[][]{{64.87f, 304.67f}, {204.87f, 444.67f}});
-        City miami = new City("Miami", Disease.YELLOW, new float[][]{{312.74f, 332.64f}, {452.74f, 472.64f}});
-        City mexicoCity = new City("Mexico City", Disease.YELLOW, new float[][]{{177.81f, 357.62f}, {317.81f, 497.62f}});
-        City bogota = new City("Bogota", Disease.YELLOW, new float[][]{{317.74f, 453.54f}, {457.74f, 593.54f}});
-        City lima = new City("Lima", Disease.YELLOW, new float[][]{{235.78f, 576.44f}, {375.78f, 716.44f}});
-        City santiago = new City("Santiago", Disease.YELLOW, new float[][]{{282.76f, 741.30f}, {422.76f, 881.30f}});
-        City buenosAires = new City("Buenos Aires", Disease.YELLOW, new float[][]{{405.70f, 685.35f}, {545.70f, 825.35f}});
-        City saoPaulo = new City("Sao Paulo", Disease.YELLOW, new float[][]{{470.66f, 591.43f}, {610.66f, 731.43f}});
-        City lagos = new City("Lagos", Disease.YELLOW, new float[][]{{674.56f, 422.57f}, {814.56f, 562.57f}});
-        City khartoum = new City("Khartoum", Disease.YELLOW, new float[][]{{829.47f, 400.59f}, {969.47f, 540.59f}});
-        City kinshasa = new City("Kinshasa", Disease.YELLOW, new float[][]{{762.51f, 535.47f}, {902.51f, 675.47f}});
-        City johannesburg = new City("Johannesburg", Disease.YELLOW, new float[][]{{813.48f, 642.38f}, {953.48f, 782.38f}});
+        City losAngeles = new City("Los Angeles", Disease.YELLOW, new float[][]{{237.8761f, 338.68777f}, {377.8761f, 478.68777f}});
+        City miami = new City("Miami", Disease.YELLOW, new float[][]{{484.74753f, 365.66528f}, {624.74756f, 505.66528f}});
+        City mexicoCity = new City("Mexico City", Disease.YELLOW, new float[][]{{351.81674f, 389.6453f}, {491.81674f, 529.64526f}});
+        City bogota = new City("Bogota", Disease.YELLOW, new float[][]{{497.74075f, 488.56287f}, {637.7407f, 628.56287f}});
+        City lima = new City("Lima", Disease.YELLOW, new float[][]{{406.78812f, 612.45966f}, {546.7881f, 752.45966f}});
+        City santiago = new City("Santiago", Disease.YELLOW, new float[][]{{451.7647f, 774.32477f}, {591.7647f, 914.32477f}});
+        City buenosAires = new City("Buenos Aires", Disease.YELLOW, new float[][]{{577.6991f, 719.37054f}, {717.6991f, 859.37054f}});
+        City saoPaulo = new City("Sao Paulo", Disease.YELLOW, new float[][]{{640.6663f, 624.44965f}, {780.6663f, 764.44965f}});
+        City lagos = new City("Lagos", Disease.YELLOW, new float[][]{{838.56323f, 452.59286f}, {978.56323f, 592.5929f}});
+        City khartoum = new City("Khartoum", Disease.YELLOW, new float[][]{{1004.4768f, 436.60617f}, {1144.4768f, 576.6062f}});
+        City kinshasa = new City("Kinshasa", Disease.YELLOW, new float[][]{{935.51276f, 567.4971f}, {1075.5127f, 707.4971f}});
+        City johannesburg = new City("Johannesburg", Disease.YELLOW, new float[][]{{988.48517f, 674.408f}, {1128.4851f, 814.408f}});
 
         // black cities
-        City moscow = new City("Moscow", Disease.BLACK, new float[][]{{928.42f, 117.82f}, {1068.42f, 257.82f}});
-        City istanbul = new City("Istanbul", Disease.BLACK, new float[][]{{871.45f, 203.75f}, {1011.45f, 343.75f}});
-        City algiers = new City("Algiers", Disease.BLACK, new float[][]{{735.52f, 298.67f}, {875.52f, 438.67f}});
-        City tehran = new City("Tehran", Disease.BLACK, new float[][]{{1000.39f, 181.77f}, {1140.39f, 321.77f}});
-        City baghdad = new City("Baghdad", Disease.BLACK, new float[][]{{944.41f, 266.70f}, {1084.41f, 406.70f}});
-        City cairo = new City("Cairo", Disease.BLACK, new float[][]{{833.47f, 319.65f}, {973.47f, 459.65f}});
-        City riyadh = new City("Riyadh", Disease.BLACK, new float[][]{{918.43f, 361.62f}, {1058.43f, 501.62f}});
-        City karachi = new City("Karachi", Disease.BLACK, new float[][]{{1034.37f, 299.67f}, {1174.37f, 439.67f}});
-        City delhi = new City("Delhi", Disease.BLACK, new float[][]{{1098.33f, 210.74f}, {1238.33f, 350.74f}});
-        City mumbai = new City("Mumbai", Disease.BLACK, new float[][]{{1034.37f, 416.57f}, {1174.37f, 556.57f}});
-        City chennai = new City("Chennai", Disease.BLACK, new float[][]{{1129.32f, 446.55f}, {1269.32f, 586.55f}});
-        City kolkata = new City("Kolkata", Disease.BLACK, new float[][]{{1162.30f, 306.66f}, {1302.30f, 446.66f}});
+        City moscow = new City("Moscow", Disease.BLACK, new float[][]{{1102.4258f, 152.84264f}, {1242.4258f, 292.84265f}});
+        City istanbul = new City("Istanbul", Disease.BLACK, new float[][]{{1043.4565f, 239.7702f}, {1183.4565f, 379.7702f}});
+        City algiers = new City("Algiers", Disease.BLACK, new float[][]{{909.52625f, 336.68942f}, {1049.5262f, 476.68942f}});
+        City tehran = new City("Tehran", Disease.BLACK, new float[][]{{1175.3878f, 217.78851f}, {1315.3878f, 357.7885f}});
+        City baghdad = new City("Baghdad", Disease.BLACK, new float[][]{{1117.418f, 292.72607f}, {1257.418f, 432.72607f}});
+        City cairo = new City("Cairo", Disease.BLACK, new float[][]{{1006.47577f, 356.6728f}, {1146.4758f, 496.6728f}});
+        City riyadh = new City("Riyadh", Disease.BLACK, new float[][]{{1094.4299f, 391.64365f}, {1234.4299f, 531.6437f}});
+        City karachi = new City("Karachi", Disease.BLACK, new float[][]{{1208.3706f, 333.69193f}, {1348.3706f, 473.69193f}});
+        City delhi = new City("Delhi", Disease.BLACK, new float[][]{{1278.3342f, 248.7627f}, {1418.3342f, 388.7627f}});
+        City mumbai = new City("Mumbai", Disease.BLACK, new float[][]{{1212.3685f, 451.5937f}, {1352.3685f, 591.5937f}});
+        City chennai = new City("Chennai", Disease.BLACK, new float[][]{{1304.3207f, 480.56952f}, {1444.3207f, 620.5695f}});
+        City kolkata = new City("Kolkata", Disease.BLACK, new float[][]{{1335.3044f, 340.6861f}, {1475.3044f, 480.6861f}});
 
         // red cities
-        City beijing = new City("Beijing", Disease.RED, new float[][]{{1201.28f, 100.84f}, {1341.28f, 240.84f}});
-        City seoul = new City("Seoul", Disease.RED, new float[][]{{1322.22f, 92.84f}, {1462.22f, 232.84f}});
-        City tokyo = new City("Tokyo", Disease.RED, new float[][]{{1413.17f, 163.78f}, {1553.17f, 303.78f}});
-        City shanghai = new City("Shanghai", Disease.RED, new float[][]{{1228.27f, 192.76f}, {1368.27f, 332.76f}});
-        City hongKong = new City("Hong Kong", Disease.RED, new float[][]{{1256.25f, 280.69f}, {1396.25f, 420.69f}});
-        City taipei = new City("Taipei", Disease.RED, new float[][]{{1389.18f, 335.64f}, {1529.18f, 475.64f}});
-        City osaka = new City("Osaka", Disease.RED, new float[][]{{1440.16f, 251.71f}, {1580.16f, 391.71f}});
-        City bangkok = new City("Bangkok", Disease.RED, new float[][]{{1202.28f, 390.59f}, {1342.28f, 530.59f}});
-        City hoChiMinhCity = new City("Ho Chi Minh City", Disease.RED, new float[][]{{1289.24f, 436.56f}, {1429.24f, 576.56f}});
-        City manila = new City("Manila", Disease.RED, new float[][]{{1391.18f, 461.54f}, {1531.18f, 601.54f}});
-        City jakarta = new City("Jakarta", Disease.RED, new float[][]{{1209.28f, 515.49f}, {1349.28f, 655.49f}});
-        City sydney = new City("Sydney", Disease.RED, new float[][]{{1439.16f, 690.34f}, {1579.16f, 830.34f}});
+        City beijing = new City("Beijing", Disease.RED, new float[][]{{1380.2811f, 134.85762f}, {1520.2811f, 274.8576f}});
+        City seoul = new City("Seoul", Disease.RED, new float[][]{{1495.2212f, 127.86345f}, {1635.2212f, 267.86346f}});
+        City tokyo = new City("Tokyo", Disease.RED, new float[][]{{1585.1743f, 191.81017f}, {1725.1743f, 331.81018f}});
+        City shanghai = new City("Shanghai", Disease.RED, new float[][]{{1400.2706f, 226.78104f}, {1540.2706f, 366.78104f}});
+        City hongKong = new City("Hong Kong", Disease.RED, new float[][]{{1429.2556f, 313.7086f}, {1569.2556f, 453.7086f}});
+        City taipei = new City("Taipei", Disease.RED, new float[][]{{1567.1837f, 371.66028f}, {1707.1837f, 511.66028f}});
+        City osaka = new City("Osaka", Disease.RED, new float[][]{{1613.1598f, 282.7344f}, {1753.1598f, 422.7344f}});
+        City bangkok = new City("Bangkok", Disease.RED, new float[][]{{1378.2821f, 424.61615f}, {1518.2821f, 564.61615f}});
+        City hoChiMinhCity = new City("Ho Chi Minh City", Disease.RED, new float[][]{{1465.2368f, 472.5762f}, {1605.2368f, 612.5762f}});
+        City manila = new City("Manila", Disease.RED, new float[][]{{1564.1853f, 502.5512f}, {1704.1853f, 642.5512f}});
+        City jakarta = new City("Jakarta", Disease.RED, new float[][]{{1385.2784f, 552.5096f}, {1525.2784f, 692.5096f}});
+        City sydney = new City("Sydney", Disease.RED, new float[][]{{1617.1577f, 723.3672f}, {1757.1577f, 863.3672f}});
 
-        //blue connections
+        ///blue connections
         chicago.setConnections(new City[]{sanFrancisco, losAngeles, mexicoCity, atlanta, montreal});
-        washington.setConnections(new City[]{atlanta, montreal, newYork});
+        washington.setConnections(new City[]{atlanta, montreal, newYork, miami});
         atlanta.setConnections(new City[]{washington, chicago, miami});
         newYork.setConnections(new City[]{montreal, washington, madrid, london});
         montreal.setConnections(new City[]{chicago, newYork, washington});
-        sanFrancisco.setConnections(new City[]{losAngeles, chicago, tokyo, manila});
+        sanFrancisco.setConnections(new City[]{losAngeles, chicago, osaka, manila});
         london.setConnections(new City[]{essen, newYork, madrid, paris});
         madrid.setConnections(new City[]{newYork, london, paris, saoPaulo, algiers});
         paris.setConnections(new City[]{london, essen, milan, algiers, madrid});
         essen.setConnections(new City[]{london, paris, milan, stPetersburg});
         milan.setConnections(new City[]{essen, paris, istanbul});
         stPetersburg.setConnections(new City[]{essen, istanbul, moscow});
+
+        //yellow connections
+        losAngeles.setConnections(new City[]{sydney, sanFrancisco, chicago, mexicoCity});
+        mexicoCity.setConnections(new City[]{losAngeles, chicago, miami, bogota, lima});
+        miami.setConnections(new City[]{mexicoCity, atlanta, washington, bogota});
+        bogota.setConnections(new City[]{mexicoCity, miami, lima, buenosAires, saoPaulo});
+        lima.setConnections(new City[]{mexicoCity, bogota, santiago});
+        santiago.setConnections(new City[]{lima});
+        buenosAires.setConnections(new City[]{bogota, saoPaulo});
+        saoPaulo.setConnections(new City[]{buenosAires, bogota, madrid, lagos});
+        lagos.setConnections(new City[]{saoPaulo, khartoum, kinshasa});
+        khartoum.setConnections(new City[]{cairo, lagos, kinshasa, johannesburg});
+        kinshasa.setConnections(new City[]{lagos, khartoum, johannesburg});
+        johannesburg.setConnections(new City[]{kinshasa, khartoum});
 
         //black connections
         istanbul.setConnections(new City[]{stPetersburg, moscow, milan, algiers, cairo, baghdad});
@@ -101,23 +115,9 @@ public class Board {
         shanghai.setConnections(new City[]{beijing, seoul, tokyo, hongKong, taipei});
         beijing.setConnections(new City[]{shanghai, seoul});
         seoul.setConnections(new City[]{beijing, shanghai, tokyo});
-        tokyo.setConnections(new City[]{seoul, shanghai, osaka, sanFrancisco});
-        osaka.setConnections(new City[]{tokyo, taipei});
+        tokyo.setConnections(new City[]{seoul, shanghai, osaka});
+        osaka.setConnections(new City[]{tokyo, taipei, sanFrancisco});
         sydney.setConnections(new City[]{jakarta, manila, losAngeles});
-
-        //yellow connections
-        losAngeles.setConnections(new City[]{sydney, sanFrancisco, chicago, mexicoCity});
-        mexicoCity.setConnections(new City[]{losAngeles, chicago, miami, bogota, lima});
-        miami.setConnections(new City[]{mexicoCity, atlanta, washington, bogota});
-        bogota.setConnections(new City[]{mexicoCity, miami, lima, buenosAires, saoPaulo});
-        lima.setConnections(new City[]{mexicoCity, bogota, santiago});
-        santiago.setConnections(new City[]{lima});
-        buenosAires.setConnections(new City[]{bogota, saoPaulo});
-        saoPaulo.setConnections(new City[]{buenosAires, bogota, madrid, lagos});
-        lagos.setConnections(new City[]{saoPaulo, khartoum, kinshasa});
-        khartoum.setConnections(new City[]{cairo, lagos, kinshasa, johannesburg});
-        kinshasa.setConnections(new City[]{lagos, khartoum, johannesburg});
-        johannesburg.setConnections(new City[]{kinshasa, khartoum});
 
         this.allCities = new City[]{chicago, sanFrancisco, montreal, newYork, washington, atlanta, london,
                 essen, stPetersburg, madrid, paris, milan, losAngeles, miami, mexicoCity, bogota,

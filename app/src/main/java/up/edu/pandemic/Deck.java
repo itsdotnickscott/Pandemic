@@ -66,82 +66,44 @@ public class Deck {
      * @param numPlayers The number of players.
      */
     public void insertEpidemics(int numPlayers) {
+        // determine deck size - add one to round up
+        int pileSize = (this.getCardsLeft() + 1) / PandemicGameState.NUM_EPIDEMICS;
+
         City epidemic = new City(City.EPIDEMIC);
-        // temporary decks for a 2 and 4 player game
-        City[] temp1 = new City[9];
-        City[] temp2 = new City[9];
-        City[] temp3 = new City[9];
-        City[] temp4 = new City[9];
-        // temporary deck for a 3 player game
-        City[] temp5;
-        if(numPlayers == 3) {
-            temp5 = new City[8];
-        }
-        else {
-            temp5 = new City[9];
+
+        // initialize the starting mini stacks
+        City[][] temp = new City[PandemicGameState.NUM_EPIDEMICS][];
+        for(int i = 0; i < PandemicGameState.NUM_EPIDEMICS; i++) {
+            if(numPlayers == 3 && i == PandemicGameState.NUM_EPIDEMICS - 1) {
+                temp[i] = new City[pileSize];
+            }
+            else {
+                temp[i] = new City[pileSize + 1];
+            }
         }
 
-        //initialize the first mini stack
-        for(int j = 0; j < 8; j++){
-            temp1[j] = this.deck[j];
+        // create the mini stacks
+        for(int i = 0; i < PandemicGameState.NUM_EPIDEMICS; i++) {
+            if(numPlayers == 3 && i == PandemicGameState.NUM_EPIDEMICS - 1) {
+                pileSize--;
+            }
+            for(int j = 0; j < pileSize; j++) {
+                // insert city into this temporary mini stack
+                temp[i][j] = this.deck[this.currPos + 1 + (i * pileSize)];
+            }
+            temp[i][pileSize] = epidemic; // last spot is an epidemic card
+            temp[i] = shuffle(temp[i]);
         }
-        temp1[8] = epidemic; //set the last space equal to an epidemic
-        temp1 = shuffle(temp1);
 
-        //stack 2
-        for(int j = 8; j < 16; j++){
-            temp2[j - 8] = this.deck[j];
-        }
-        temp2[8] = epidemic;
-        temp2 = shuffle(temp2);
+        // reset pile size
+        pileSize = (this.getCardsLeft() + 1) / PandemicGameState.NUM_EPIDEMICS;
 
-        //stack 3
-        for(int j = 16; j < 24; j++){
-            temp3[j - 16] = this.deck[j];
-        }
-        temp3[8] = epidemic;
-        temp3 = shuffle(temp3);
-
-        //stack 4
-        for(int j = 24; j < 32; j++){
-            temp4[j - 24] = this.deck[j];
-        }
-        temp4[8] = epidemic;
-        temp4 = shuffle(temp4);
-
-        //stack 5
-        if(numPlayers == 3) {
-            for(int j = 32; j < 39; j++){
-                temp5[j - 32] = this.deck[j];
+        for(int i = 0; i < PandemicGameState.NUM_EPIDEMICS; i++) {
+            if(numPlayers == 3 && i == PandemicGameState.NUM_EPIDEMICS - 1) {
+                pileSize--;
             }
-            temp5[7] = epidemic;
-        }
-        else {
-            for (int j = 32; j < 40; j++) {
-                temp5[j - 32] = this.deck[j];
-            }
-            temp5[8] = epidemic;
-        }
-        temp5 = shuffle(temp5);
-
-        //put the newly shuffled decks into the final player deck
-        for(int i = 0; i < this.deck.length; i++){
-            if(i < 9) {
-                this.deck[i] = temp1[i];
-            }
-            else if(i < 18) {
-                this.deck[i] = temp2[i - 9];
-            }
-            else if(i < 27) {
-                this.deck[i] = temp3[i - 18];
-            }
-            else if(i < 36) {
-                this.deck[i] = temp4[i - 27];
-            }
-            else if(i < 45) {
-                if(!(i == 44 && numPlayers == 3)) {
-                    this.deck[i] = temp5[i - 36];
-                }
+            for(int j = 0; j < pileSize; j++) {
+                this.deck[this.currPos + 1 + (i * pileSize)] = temp[i][j];
             }
         }
     } // insertEpidemics()

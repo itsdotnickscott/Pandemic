@@ -142,16 +142,7 @@ View.OnTouchListener {
             this.epiLeft.setText("Epidemics Left: " + ((PandemicGameState) info).getEpiLeft());
             this.actionsLeft.setText("Actions Left: " + ((PandemicGameState) info).getActionsLeft());
 
-            switch(((PandemicGameState) info).getOutbreaks()) {
-                case 0: this.outbreakCounter.setImageResource(R.drawable.outbreak0); break;
-                case 1: this.outbreakCounter.setImageResource(R.drawable.outbreak1); break;
-                case 2: this.outbreakCounter.setImageResource(R.drawable.outbreak2); break;
-                case 3: this.outbreakCounter.setImageResource(R.drawable.outbreak3); break;
-                case 4: this.outbreakCounter.setImageResource(R.drawable.outbreak4); break;
-                case 5: this.outbreakCounter.setImageResource(R.drawable.outbreak5); break;
-                case 6: this.outbreakCounter.setImageResource(R.drawable.outbreak6); break;
-                case 7: this.outbreakCounter.setImageResource(R.drawable.outbreak7); break;
-            }*/
+*/
 
             // update all of the current player cards
             String allCards = "";
