@@ -61,6 +61,12 @@ public class PandemicGameState extends GameState {
     private int epiLeft;
     private int gameCondition;
 
+    private String infoBar = "";
+    private String infoBarInfected = "";
+    private String infoBarOutbroke = "";
+    private String infoBarEpidemic = "";
+    private boolean epidemicPulled;
+
     /** PandemicState()
      * The constructor class for the main Pandemic state. Sets all instance variables to start.
      * @param num Number of players.
@@ -81,7 +87,7 @@ public class PandemicGameState extends GameState {
         // choose starting player at random
         Random rng = new Random();
         this.numPlayers = num;
-        this.currPlayer = 0; //rng.nextInt(numPlayers);
+        this.currPlayer = rng.nextInt(numPlayers);
         this.actionsLeft = NUM_ACTIONS;
         this.needToDiscard = false;
         this.drawCardsLeft = NUM_DRAW_CARDS;
@@ -141,6 +147,7 @@ public class PandemicGameState extends GameState {
         this.playerDeck.insertEpidemics(this.numPlayers);
 
         this.gameCondition = PLAY;
+        this.epidemicPulled = false;
     } // PandemicState()
 
     /** PandemicState()
@@ -182,6 +189,11 @@ public class PandemicGameState extends GameState {
         }
 
         this.gameCondition = orig.gameCondition;
+        this.infoBar = orig.infoBar;
+        this.infoBarInfected = orig.infoBarInfected;
+        this.infoBarEpidemic = orig.infoBarEpidemic;
+        this.infoBarOutbroke = orig.infoBarOutbroke;
+        this.epidemicPulled = orig.epidemicPulled;
     } // PandemicState()
 
     /** needToDiscard()
@@ -225,6 +237,8 @@ public class PandemicGameState extends GameState {
             if(this.currCity[player].getConnections()[i].getName().equals(newCity.getName())) {
                 this.currCity[player] = this.cities.getCity(newCity.getName());
                 this.actionsLeft--;
+                this.infoBar = "PLAYER " + (this.currPlayer + 1) + " MOVED TO "
+                        + this.currCity[player].getName().toUpperCase();
                 return true;
             }
         }
@@ -247,6 +261,8 @@ public class PandemicGameState extends GameState {
         if(this.hasCard(player, newCity)) {
             this.currCity[player] = this.cities.getCity(newCity.getName());
             this.discard(player, newCity, true);
+            this.infoBar = "PLAYER " + (this.currPlayer + 1) + " MOVED TO "
+                    + this.currCity[player].getName().toUpperCase();
             this.actionsLeft--;
             return true;
         }
@@ -267,6 +283,8 @@ public class PandemicGameState extends GameState {
 
         this.discard(player, this.currCity[player], true);
         this.currCity[player] = this.cities.getCity(newCity.getName());
+        this.infoBar = "PLAYER " + (this.currPlayer + 1) + " MOVED TO "
+                + this.currCity[player].getName().toUpperCase();
         this.actionsLeft--;
         return true;
     } // charterFlight()
@@ -284,8 +302,10 @@ public class PandemicGameState extends GameState {
         }
 
         //check if both locations have a research station, if so, move them
-        if (currCity[player].hasStation() && newCity.hasStation()) {
+        if (currCity[player].hasStation() && this.cities.getCity(newCity.getName()).hasStation()) {
             this.currCity[player] = this.cities.getCity(newCity.getName());
+            this.infoBar = "PLAYER " + (this.currPlayer + 1) + " MOVED TO "
+                    + this.currCity[player].getName().toUpperCase();
             this.actionsLeft--;
             return true;
         }
@@ -308,9 +328,21 @@ public class PandemicGameState extends GameState {
         int col = curr.getColor();
 
         // if treating the disease was successful, remove a cube
+        // if the disease is already cured, remove ALL cubes
+        if(diseases[curr.getColor()].getState() == Disease.CURED) {
+            while (curr.treatDisease()) {
+                this.diseases[col].removeCube();
+            }
+            this.actionsLeft--;
+            return true;
+        }
+
         if(curr.treatDisease()) {
             this.diseases[col].removeCube();
+            this.infoBar = "PLAYER " + (this.currPlayer + 1) + " TREATED "
+                    + this.currCity[player].getName().toUpperCase();
             this.actionsLeft--;
+            this.checkIfEradicated();
             return true;
         }
         return false;
@@ -335,6 +367,8 @@ public class PandemicGameState extends GameState {
             if(curr.buildStation()) {
                 this.discard(player, this.currCity[player], true);
                 this.stationsLeft--;
+                this.infoBar = "PLAYER " + (this.currPlayer + 1) + " BUILT IN "
+                        + this.currCity[player].getName().toUpperCase();
                 this.actionsLeft--;
                 return true;
             }
@@ -356,19 +390,16 @@ public class PandemicGameState extends GameState {
         for(int i = 0; i < this.numPlayers; i++) {
             // make sure we are not looking at the same player
             if(i != player) {
-                // check to see if another player is in the same city
-                if(currCity[i] == currCity[player]) {
-                    for(int j = 0; j < this.numPlayers; j++) {
-                        // check to see if that player has that city card
-                        if(playerHands[i][j] == this.currCity[this.currPlayer]) {
-                            // then insert that card into current player's hand
-                            return swapCards(this.currCity[this.currPlayer], i, player, j);
-                        }
-                        // check to see if current player has that city card
-                        else if(playerHands[player][j] == this.currCity[this.currPlayer]) {
-                            // then insert that card into other player's hand
-                            return swapCards(this.currCity[this.currPlayer], player, i, j);
-                        }
+                for(int j = 0; j < HAND_LIMIT + 1; j++) {
+                    // check to see if that player has that city card
+                    if(playerHands[i][j] == this.currCity[this.currPlayer]) {
+                        // then insert that card into current player's hand
+                        return swapCards(this.currCity[this.currPlayer], i, player, j);
+                    }
+                    // check to see if current player has that city card
+                    else if(playerHands[player][j] == this.currCity[this.currPlayer]) {
+                        // then insert that card into other player's hand
+                        return swapCards(this.currCity[this.currPlayer], player, i, j);
                     }
                 }
             }
@@ -398,7 +429,6 @@ public class PandemicGameState extends GameState {
      * This is a helper method which is called when a player cures a disease. It removes five cards
      * from their hand of the same color.
      * @param color The disease that is being cured.
-     * @return Whether the discard was valid.
      */
     public void discardToCure(int color) {
         int count = 0;
@@ -409,6 +439,8 @@ public class PandemicGameState extends GameState {
             }
         }
         this.diseases[color].cure();
+        this.infoBar = "PLAYER " + (this.currPlayer + 1) + " CURED "
+                + this.diseases[color].getName() + " DISEASE";
         this.actionsLeft--;
         this.gameWon();
     } // discardToCure()
@@ -423,6 +455,7 @@ public class PandemicGameState extends GameState {
             return false;
         }
 
+        this.infoBar = "PLAYER " + (this.currPlayer + 1) + " FORGOED AN ACTION";
         this.actionsLeft--;
         return true;
 
@@ -440,6 +473,8 @@ public class PandemicGameState extends GameState {
         }
 
         if(this.actionsLeft == 0) {
+            int origOutbreak = this.outbreaks;
+
             while(this.drawCardsLeft != 0) {
                 if(!drawCard()) {
                     return false;
@@ -447,12 +482,21 @@ public class PandemicGameState extends GameState {
                 this.drawCardsLeft--;
             }
             // if it gets to here, the player has successfully drawn two cards.
+            if(this.needToDiscard()) {
+                return false;
+            }
+
+            if(!this.epidemicPulled) {
+                this.infoBarEpidemic = "";
+            }
             this.drawCardsLeft = NUM_DRAW_CARDS;
             this.drawInfectionCards();
+            this.infoBarOutbroke = this.outbreaks - origOutbreak + " OUTBREAKS OCCURRED";
 
             // continue to next player
             this.currPlayer = ++this.currPlayer % this.numPlayers;
             this.actionsLeft = NUM_ACTIONS;
+            this.epidemicPulled = false;
             return true;
         }
         else {
@@ -465,6 +509,7 @@ public class PandemicGameState extends GameState {
      * satisfy the hand limit.
      * @param player The player who is discarding a card.
      * @param disCity The city card they are trying to discard.
+     * @param override Is true if it is called from an action that requires a card to be discarded.
      * @return Whether the action was valid.
      */
     public boolean discard(int player, City disCity, boolean override){
@@ -488,6 +533,12 @@ public class PandemicGameState extends GameState {
         return false;
     } // discard()
 
+    /** discard()
+     * This method is called when a player makes an action. It will call the other discard method.
+     * @param player The player who is discarding a card.
+     * @param cityName The city name they are trying to discard.
+     * @return Whether the action was valid.
+     */
     public boolean discard(int player, String cityName) {
         for(int i = 0; i < playerHands[player].length; i++) {
             if(playerHands[player][i].getName().equals(cityName)) {
@@ -516,6 +567,8 @@ public class PandemicGameState extends GameState {
                 this.playerHands[newPlayer][i] = location;
                 // and remove the card from the original player's hand with an "empty" city card
                 this.playerHands[origPlayer][origIdx] = empty;
+                this.infoBar = "PLAYER " + (this.currPlayer + 1) + " SHARED "
+                        + this.currCity[this.currPlayer].getName().toUpperCase();
                 this.actionsLeft--;
                 return true;
             }
@@ -541,7 +594,7 @@ public class PandemicGameState extends GameState {
     } // hasCard()
 
     /** drawCard()
-     *  This method draws a city card for the player and adds it into their hand.
+     * This method draws a city card for the player and adds it into their hand.
      * @return Whether drawing a card was successful.
      */
     public boolean drawCard() {
@@ -569,6 +622,8 @@ public class PandemicGameState extends GameState {
      * Epidemics increase the difficulty of the game significantly.
      */
     public void epidemic() {
+        this.epidemicPulled = true;
+
         // step 1) increase: adjust the infection rate
         switch(this.epiLeft) {
             case 5: case 4: break;
@@ -579,16 +634,19 @@ public class PandemicGameState extends GameState {
 
         // step 2) infect: draw bottom card, infect that city at max
         City epidemic = this.infectionDeck.drawBottomCard();
-        for(int i = 0; i < City.MAX_CUBES; i++) {
-            if(epidemic.infectCity(this.diseases)) {
-                this.outbreaks++;
-                i = City.MAX_CUBES;
+        this.infoBarEpidemic = "EPIDEMIC PULLED - " + epidemic.getName() + " INFECTED AT MAX";
+        if(diseases[epidemic.getColor()].getState() != Disease.ERADICATED) {
+            for(int i = 0; i < City.MAX_CUBES; i++) {
+                int numOutbroke = epidemic.infectCity(this.diseases);
+                if(numOutbroke > 0) {
+                    this.outbreaks += numOutbroke;
+                    i = City.MAX_CUBES;
+                }
             }
         }
 
         // step 3) intensify: shuffle all previously drawn cards
         this.infectionDeck.shuffleEpidemic();
-
         this.gameLost();
     } // epidemic()
 
@@ -597,12 +655,27 @@ public class PandemicGameState extends GameState {
      * cube there. An outbreak occurs if the city already has three cubes.
      */
     public void drawInfectionCards() {
+        this.infoBarInfected = "";
         for(int i = 0; i < this.infRate; i++) {
             City infect = this.infectionDeck.draw();
-            if(infect.infectCity(this.diseases)) {
-                outbreaks++;
+            this.infoBarInfected += infect.getName();
+            if(this.infRate == 2 & i == 0) {
+                this.infoBarInfected += " AND ";
+            }
+            else if(i < this.infRate - 2) {
+                this.infoBarInfected += ", ";
+            }
+            else if(i < this.infRate - 1){
+                this.infoBarInfected += ", AND ";
+            }
+
+            if (diseases[infect.getColor()].getState() != Disease.ERADICATED) {
+                int numOutbroke = infect.infectCity(this.diseases);
+                this.outbreaks += numOutbroke;
+                this.cities.resetHasOutbroke();
             }
         }
+        this.infoBarInfected += " WERE INFECTED";
 
         this.gameLost();
     } // drawInfectionCards()
@@ -639,6 +712,11 @@ public class PandemicGameState extends GameState {
         this.gameCondition = WIN;
     } // gameWon()
 
+    /** countFiveCards()
+     * This is a helper method that checks to see if there are five cards of the same color in the
+     * player's hand.
+     * @return The color of the disease they have five cards of. -1 if no color met the requirement.
+     */
     public int countFiveCards() {
         // counters for cards
         int blue = 0;
@@ -681,6 +759,18 @@ public class PandemicGameState extends GameState {
         // if it gets here, not enough cards were found of one color
         return -1;
     }
+
+    /** checkIfEradicated()
+     * This methods checks all diseases to eradicate if they have been cured and treated in
+     * all cities.
+     */
+    public void checkIfEradicated() {
+        for(int i = 0; i < Disease.NUM_DISEASES; i++) {
+            if (diseases[i].getCubesLeft() == Disease.NUM_CUBES && diseases[i].getState() == Disease.CURED) {
+                diseases[i].eradicate();
+            }
+        }
+    } // checkIfEradicated()
 
     /** checkDoableActions()
      * This method checks to see what actions can be performed; not necessarily if they are valid.
@@ -725,22 +815,22 @@ public class PandemicGameState extends GameState {
                         if(!this.currCity[this.currPlayer].hasStation()) {
                             canDo[BUILD] = true;
                         }
+                    }
 
-                        // and check to see if there is at least two people in one city
-                        for(int i = 0; i < this.numPlayers; i++) {
-                            // make sure we are not looking at the same player
-                            if(i != this.currPlayer) {
-                                // check to see if another player is in the same city
-                                if(currCity[i] == currCity[player]) {
-                                    for(int j = 0; j < this.numPlayers; j++) {
+                    // and check to see if there is at least two people in one city
+                    for(int i = 0; i < this.numPlayers; i++) {
+                        // make sure we are not looking at the same player
+                        if(i != this.currPlayer) {
+                            // check to see if another player is in the same city
+                            if(currCity[i] == currCity[player]) {
+                                // check if current player has the city card
+                                if(currCard) {
+                                    canDo[SHARE] = true;
+                                }
+                                else {
+                                    for(int j = 0; j < HAND_LIMIT + 1; j++) {
                                         // check to see if that player has that city card
-                                        if(playerHands[i][j] == this.currCity[this.currPlayer]) {
-                                            canDo[SHARE] = true;
-                                        }
-                                        // or if the current player has that city card
-                                        else if(playerHands[player][j] ==
-                                                this.currCity[this.currPlayer]) {
-                                            // then insert that card into other player's hand
+                                        if (playerHands[i][j].getName().equals(this.currCity[this.currPlayer].getName())) {
                                             canDo[SHARE] = true;
                                         }
                                     }
@@ -752,18 +842,20 @@ public class PandemicGameState extends GameState {
                     // checks to see if there's a research station
                     if(this.currCity[this.currPlayer].hasStation()) {
                         // and if there are at least two research stations
-                        if(this.stationsLeft < 5) {
+                        if(this.stationsLeft < MAX_STATIONS - 1) {
                             canDo[SHUTTLE_FLIGHT] = true;
                         }
 
-                        // and if the current player has five cards of the same color
-                        if(this.countFiveCards() != -1) {
+                        // and if the current player has five cards of the same color and that it
+                        // isn't cured yet
+                        if(this.countFiveCards() != -1 &&
+                                this.diseases[this.countFiveCards()].getState() == Disease.UNCURED) {
                             canDo[CURE] = true;
                         }
                     }
 
                     // checks to see if there is at least one cube at the city
-                    if(this.currCity[this.currPlayer].getCubes() != 0) {
+                    if(this.currCity[this.currPlayer].getCubes() > 0) {
                         canDo[TREAT] = true;
                     }
                 }
@@ -777,9 +869,11 @@ public class PandemicGameState extends GameState {
         return canDo;
     } // checkDoableActions()
 
-    /** getDeck()
-     * @return The player deck.
-     */
+    public void setInfoBar(String info) {
+        this.infoBar = info;
+    }
+
+    // ---------------------- GETTER METHODS ---------------------- //
     public Disease[] getDiseases() {
         return diseases;
     }
@@ -828,12 +922,28 @@ public class PandemicGameState extends GameState {
         return playerHands;
     }
 
-    @NonNull
-    @Override
+    public String getInfoBar() {
+        return infoBar;
+    }
+
+    public String getInfoBarInfected() {
+        return infoBarInfected;
+    }
+
+    public String getInfoBarOutbroke() {
+        return infoBarOutbroke;
+    }
+
+    public String getInfoBarEpidemic() {
+        return infoBarEpidemic;
+    }
+
     /** toString()
      * This method converts all the information of the Pandemic Game State and puts into a String.
      * @return The String with all of the information.
      */
+    @NonNull
+    @Override
     public String toString() {
         String gameState = "PANDEMIC GAME STATE\n";
 

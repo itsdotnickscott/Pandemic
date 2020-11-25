@@ -62,9 +62,15 @@ public class PandemicGUIView extends SurfaceView {
     private Bitmap bigBlue;
     private Bitmap bigGreen;
 
-    private PandemicGameState state;
-    private Paint textNormal;
+    private Bitmap actions0;
+    private Bitmap actions1;
+    private Bitmap actions2;
+    private Bitmap actions3;
+    private Bitmap actions4;
+
     private Paint textBold;
+
+    private PandemicGameState state;
 
     public PandemicGUIView(Context context, AttributeSet attributes) {
         super(context, attributes);
@@ -121,20 +127,19 @@ public class PandemicGUIView extends SurfaceView {
         bigBlue = BitmapFactory.decodeResource(getResources(), R.drawable.bigblue);
         bigGreen = BitmapFactory.decodeResource(getResources(), R.drawable.biggreen);
 
-        textNormal = new Paint();
-        textNormal.setColor(Color.WHITE);
-        textNormal.setTextSize(72.0f);
-        textBold = new Paint();
-        textBold.setTextSize(56.0f);
+        actions0 = BitmapFactory.decodeResource(getResources(), R.drawable.actions0);
+        actions1 = BitmapFactory.decodeResource(getResources(), R.drawable.actions1);
+        actions2 = BitmapFactory.decodeResource(getResources(), R.drawable.actions2);
+        actions3 = BitmapFactory.decodeResource(getResources(), R.drawable.actions3);
+        actions4 = BitmapFactory.decodeResource(getResources(), R.drawable.actions4);
 
-        Typeface normal = Typeface.createFromAsset(context.getAssets(), "font/lgs.ttf");
-        textNormal.setTypeface(normal);
+        textBold = new Paint();
         Typeface bold = Typeface.createFromAsset(context.getAssets(), "font/lgsb.ttf");
         textBold.setTypeface(bold);
     }
 
     @Override
-    public void onDraw(Canvas canvas){
+    public void onDraw(Canvas canvas) {
         canvas.drawBitmap(this.gui, 0.0f, 0.0f, null);
 
         if(this.state != null) {
@@ -143,9 +148,42 @@ public class PandemicGUIView extends SurfaceView {
             this.updateCurrPlayer(canvas);
             this.updateCities(canvas);
             this.updateInfo(canvas);
+            this.updateActions(canvas);
+            this.updateInfoBar(canvas);
         }
 
         canvas.drawBitmap(this.cityNames, 0.0f, 0.0f, null);
+    }
+
+    public void updateInfoBar(Canvas canvas) {
+        textBold.setColor(Color.WHITE);
+        textBold.setTextSize(45.0f);
+
+        float startLeft = 530.0f;
+        float startHeight = 65.0f;
+        canvas.drawText(this.state.getInfoBar(), startLeft, startHeight, this.textBold);
+
+        textBold.setTextSize(32.0f);
+
+        startLeft = 750.0f;
+        startHeight = 868.5f;
+        float addBy = 24.0f;
+        canvas.drawText(this.state.getInfoBarEpidemic(), startLeft, startHeight, this.textBold);
+        canvas.drawText(this.state.getInfoBarInfected(), startLeft, startHeight + addBy, this.textBold);
+        canvas.drawText(this.state.getInfoBarOutbroke(), startLeft, startHeight + addBy * 2, this.textBold);
+    }
+
+    public void updateActions(Canvas canvas) {
+        float startLeft = 177.75f;
+        float startHeight = 712.0f;
+
+        switch(state.getActionsLeft()) {
+            case 0: canvas.drawBitmap(this.actions0, startLeft, startHeight, null); break;
+            case 1: canvas.drawBitmap(this.actions1, startLeft, startHeight, null); break;
+            case 2: canvas.drawBitmap(this.actions2, startLeft, startHeight, null); break;
+            case 3: canvas.drawBitmap(this.actions3, startLeft, startHeight, null); break;
+            case 4: canvas.drawBitmap(this.actions4, startLeft, startHeight, null); break;
+        }
     }
 
     public void updateInfo(Canvas canvas) {
@@ -154,6 +192,7 @@ public class PandemicGUIView extends SurfaceView {
         float addBy = 71.0f;
 
         textBold.setColor(Color.WHITE);
+        textBold.setTextSize(56.0f);
         for(int i = 0; i < Disease.NUM_DISEASES; i++) {
             canvas.drawText("" + this.state.getDiseases()[i].getCubesLeft(),
                     startLeft + (addBy * i), centerCoord, this.textBold);
@@ -317,6 +356,7 @@ public class PandemicGUIView extends SurfaceView {
                             canvas.drawBitmap(eradYellow, centerCoord, startHeight + (addBy * i), null);
                             break;
                     }
+                    break;
                 case Disease.BLACK:
                     switch (this.state.getDiseases()[i].getState()) {
                         case Disease.CURED:
@@ -329,6 +369,7 @@ public class PandemicGUIView extends SurfaceView {
                             canvas.drawBitmap(eradBlack, centerCoord, startHeight + (addBy * i), null);
                             break;
                     }
+                    break;
                 case Disease.RED:
                     switch (this.state.getDiseases()[i].getState()) {
                         case Disease.CURED:
@@ -341,6 +382,7 @@ public class PandemicGUIView extends SurfaceView {
                             canvas.drawBitmap(eradRed, centerCoord, startHeight + (addBy * i), null);
                             break;
                     }
+                    break;
             }
         }
     }

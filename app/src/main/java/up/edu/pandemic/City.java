@@ -123,17 +123,16 @@ public class City {
     /** infectCity()
      * This method adds a disease cube to the city if its infection card is pulled.
      * @param diseases An array of diseases.
-     * @return True if an outbreak occurs. False if only a cube was added.
+     * @return The number of outbreaks that occurred.
      */
-    public boolean infectCity(Disease[] diseases) {
+    public int infectCity(Disease[] diseases) {
         if(this.cubes == 3) {
-            this.outbreak(diseases);
-            return true;
+            return 1 + this.outbreak(diseases);
         }
         else {
             this.cubes++;
             diseases[this.color].addCube();
-            return false;
+            return 0;
         }
     }
 
@@ -150,15 +149,22 @@ public class City {
      * cities instead.
      * @param diseases An array of diseases.
      */
-    public void outbreak(Disease[] diseases) {
+    public int outbreak(Disease[] diseases) {
         this.hasOutbroke = true;
+        int outbreaks = 0;
         for(int i = 0; i < this.connections.length; i++) {
             if(!this.connections[i].hasOutbroke) {
-                this.connections[i].infectCity(diseases);
+                if(this.connections[i].infectCity(diseases) > 0) {
+                    outbreaks++;
+                }
             }
         }
-        this.hasOutbroke = false;
+        return outbreaks;
     } // outbreak()
+
+    public void resetHasOutbroke() {
+        this.hasOutbroke = false;
+    }
 
     /** getLocation()
      * @return A "hitbox" of the city, represented by coordinates.

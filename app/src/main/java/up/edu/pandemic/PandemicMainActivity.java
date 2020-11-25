@@ -28,22 +28,25 @@ public class PandemicMainActivity extends GameMainActivity {
             }});
 
         // a computer player type (player type 1)
-        playerTypes.add(new GamePlayerType("Computer Player") {
+        playerTypes.add(new GamePlayerType("Dumb AI") {
             public GamePlayer createPlayer(String name) {
                 return new PandemicDumbAI(name);
             }});
 
-        // Create a game configuration class for Counter:
+        playerTypes.add(new GamePlayerType("Smart AI") {
+            public GamePlayer createPlayer(String name) { return new PandemicSmartAI(name); }});
+
+        // Create a game configuration class for Pandemic:
         // - player types as given above
-        // - from 1 to 2 players
-        // - name of game is "Counter Game"
+        // - from 2 to 4 players
+        // - name of game is "Pandemic"
         // - port number as defined above
         GameConfig defaultConfig = new GameConfig(playerTypes, 2, 4, "Pandemic",
                 PORT_NUMBER);
 
         // Add the default players to the configuration
         defaultConfig.addPlayer("Human", 0); // player 1: a human player
-        defaultConfig.addPlayer("Computer", 1); // player 2: a computer player
+        defaultConfig.addPlayer("Computer", 2); // player 2: a smart computer player
 
         // Set the default remote-player setup:
         // - player name: "Remote Player"
@@ -57,6 +60,6 @@ public class PandemicMainActivity extends GameMainActivity {
 
     @Override
     public LocalGame createLocalGame() {
-        return new PandemicLocalGame(this.getConfig().getNumPlayers());
+        return new PandemicLocalGame(this.restartConfig.getNumPlayers());
     }
 }

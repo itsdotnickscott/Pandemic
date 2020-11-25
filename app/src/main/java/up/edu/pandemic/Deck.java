@@ -89,23 +89,39 @@ public class Deck {
             }
             for(int j = 0; j < pileSize; j++) {
                 // insert city into this temporary mini stack
-                temp[i][j] = this.deck[this.currPos + 1 + (i * pileSize)];
+                temp[i][j] = this.deck[this.currPos + 1 + (i * pileSize) + j];
             }
             temp[i][pileSize] = epidemic; // last spot is an epidemic card
             temp[i] = shuffle(temp[i]);
         }
 
-        // reset pile size
-        pileSize = (this.getCardsLeft() + 1) / PandemicGameState.NUM_EPIDEMICS;
+        // reset pile size to include newly created epidemic cards
+        pileSize = ((this.getCardsLeft() + 1) / PandemicGameState.NUM_EPIDEMICS) + 1;
+
+        // reset deck variables (making a brand new player deck)
+        this.deck = null;
+        this.deck = new City[Board.NUM_CITIES];
+        this.currPos = 0;
 
         for(int i = 0; i < PandemicGameState.NUM_EPIDEMICS; i++) {
             if(numPlayers == 3 && i == PandemicGameState.NUM_EPIDEMICS - 1) {
                 pileSize--;
             }
             for(int j = 0; j < pileSize; j++) {
-                this.deck[this.currPos + 1 + (i * pileSize)] = temp[i][j];
+                this.deck[this.currPos] = temp[i][j];
+                this.currPos++;
             }
         }
+
+        // put "null cards" into the rest of the deck
+        City empty = new City(City.NULL);
+
+        for(int i = this.currPos; i < Board.NUM_CITIES; i++) {
+            this.deck[i] = empty;
+        }
+
+        // reset current position so player can draw from the beginning
+        this.currPos = -1;
     } // insertEpidemics()
 
     /** shuffle()
@@ -133,7 +149,7 @@ public class Deck {
      * @return The bottom card.
      */
     public City drawBottomCard() {
-        return this.deck[Board.NUM_CITIES - 1];
+        return this.deck[this.getDeckSize() - 1];
     } // drawBottomCard()
 
     /** shuffleEpidemic()
@@ -141,9 +157,9 @@ public class Deck {
      * shuffles only the discard pile.
      */
     public void shuffleEpidemic() {
-        // shift all cards up
-        City temp = this.deck[Board.NUM_CITIES - 1];
-        for(int i = Board.NUM_CITIES - 1; i > this.currPos + 1; i--) {
+        // shift all cards not drawn up
+        City temp = this.deck[this.getDeckSize() - 1];
+        for(int i = this.getDeckSize() - 1; i > this.currPos + 1; i--) {
             this.deck[i] = this.deck[i - 1];
         }
         // in order to put the new card onto the discard pile

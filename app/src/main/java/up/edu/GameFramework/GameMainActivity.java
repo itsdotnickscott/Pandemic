@@ -89,7 +89,7 @@ public abstract class GameMainActivity extends Activity implements
     }
 
     //Keeping the user's configuration for restarting
-    private GameConfig restartConfig = null;
+    protected GameConfig restartConfig = null;
 
 
     /*

@@ -152,4 +152,10 @@ public class Board {
         }
         return null;
     } // getCity()
+
+    public void resetHasOutbroke() {
+        for(int i = 0; i < NUM_CITIES; i++) {
+            this.allCities[i].resetHasOutbroke();
+        }
+    }
 }

@@ -26,10 +26,10 @@ public class PandemicLocalGame extends LocalGame {
     @Override
     protected String checkIfGameOver() {
         if(this.gameState.getGameCondition() == PandemicGameState.LOSE) {
-            return "Game Over. You could not save the world.";
+            return "Game Over. You could not save the world. ";
         }
         else if(this.gameState.getGameCondition() == PandemicGameState.WIN) {
-            return "Game Over. You saved the world.";
+            return "Game Over. You saved the world. ";
         }
         return null;
     }

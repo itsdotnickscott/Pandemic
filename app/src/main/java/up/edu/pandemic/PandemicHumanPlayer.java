@@ -1,5 +1,6 @@
 package up.edu.pandemic;
 
+import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -70,19 +71,15 @@ View.OnTouchListener {
         // send an action based off of the button pressed
         if(view.getId() == R.id.drivebutton) {
             this.driveFerry = new DriveFerryAction(this);
-            //infoBar.setText("DRIVE/FERRY: CHOOSE A CITY ON THE MAP");
         }
         else if(view.getId() == R.id.directbutton) {
             this.directFlight = new DirectFlightAction(this);
-            //infoBar.setText("DIRECT FLIGHT: CHOOSE A CITY ON THE MAP");
         }
         else if(view.getId() == R.id.charterbutton) {
             this.charterFlight = new CharterFlightAction(this);
-            //infoBar.setText("CHARTER FLIGHT: CHOOSE A CITY ON THE MAP");
         }
         else if(view.getId() == R.id.shuttlebutton) {
             this.shuttleFlight = new ShuttleFlightAction(this);
-            //infoBar.setText("SHUTTLE FLIGHT: CHOOSE A CITY ON THE MAP");
         }
         else if(view.getId() == R.id.treatbutton) {
             TreatAction action = new TreatAction(this);
@@ -130,19 +127,21 @@ View.OnTouchListener {
     @Override
     public void receiveInfo(GameInfo info) {
         if(info instanceof PandemicGameState) {
-/*            // update the cubes left
-            this.blueLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.BLUE].getCubesLeft());
-            this.redLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.RED].getCubesLeft());
-            this.blackLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.BLACK].getCubesLeft());
-            this.yellowLeft.setText("" + ((PandemicGameState) info).getDiseases()[Disease.YELLOW].getCubesLeft());
+            if(((PandemicGameState) info).getActionsLeft() == 4) {
+                ((PandemicGameState) info).setInfoBar("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) +
+                        "'S TURN");
+            }
 
-            // update important info
-            this.infRate.setText("Infection Rate: " + ((PandemicGameState) info).getInfRate());
-            this.turnsLeft.setText("Turns Left: " + ((PandemicGameState) info).getPlayerDeck().getCardsLeft() / 2);
-            this.epiLeft.setText("Epidemics Left: " + ((PandemicGameState) info).getEpiLeft());
-            this.actionsLeft.setText("Actions Left: " + ((PandemicGameState) info).getActionsLeft());
+            if(((PandemicGameState) info).getActionsLeft() == 0 &&
+                    ((PandemicGameState) info).getCurrPlayer() == this.playerNum) {
+                ((PandemicGameState) info).setInfoBar("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) +
+                        " - PLEASE END TURN");
+            }
 
-*/
+            if(((PandemicGameState) info).needToDiscard()) {
+                ((PandemicGameState) info).setInfoBar("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) +
+                        " - PLEASE DISCARD A CARD");
+            }
 
             // update all of the current player cards
             String allCards = "";
@@ -158,12 +157,6 @@ View.OnTouchListener {
             }
 
             this.playerCards.setText(allCards);
-
-/*            // update status bar on the top
-            this.infoBar.setText("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) + "'S TURN");
-            if(((PandemicGameState) info).needToDiscard()) {
-                this.infoBar.setText("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) + ": PLEASE DISCARD A CARD");
-            }*/
 
             // update hand
             this.updateCard(0, info, this.card1);
@@ -188,6 +181,21 @@ View.OnTouchListener {
             return;
         }
         card.setText(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).getCurrPlayer()][num].getName());
+
+        switch(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).getCurrPlayer()][num].getColor()){
+            case Disease.BLUE:
+                card.setBackgroundColor(Color.BLUE);
+                break;
+            case Disease.BLACK:
+                card.setBackgroundColor(Color.GRAY);
+                break;
+            case Disease.RED:
+                card.setBackgroundColor(Color.RED);
+                break;
+            case Disease.YELLOW:
+                card.setBackgroundColor(Color.YELLOW);
+                break;
+        }
     }
 
     @Override

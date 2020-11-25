@@ -19,7 +19,7 @@ public class Disease {
     public static final int CURED = 1;
     public static final int ERADICATED = 2;
 
-    public static final int MAX_CUBES = 24;
+    public static final int NUM_CUBES = 24;
     public static final int NUM_DISEASES = 4;
 
     // instance variables
@@ -33,7 +33,7 @@ public class Disease {
      */
     public Disease(int col) {
         this.color = col;
-        this.cubesLeft = MAX_CUBES;
+        this.cubesLeft = NUM_CUBES;
         this.state = UNCURED;
     } // Disease()
 
