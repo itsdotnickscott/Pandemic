@@ -5,16 +5,25 @@ import java.util.Random;
 import up.edu.GameFramework.GameComputerPlayer;
 import up.edu.GameFramework.infoMessage.GameInfo;
 
+/** PandemicDumbAI
+ * This is a computer player for Pandemic, which makes decisions randomly.
+ * @author Nick Scott, Sarah Strong, Emily Vo.
+ * @version 24 November 2020.
+ */
+
 public class PandemicDumbAI extends GameComputerPlayer {
-    /**
-     * constructor
-     *
-     * @param name the player's name (e.g., "John")
+    /** PandemicDumbAI
+     * This is the constructor for the computer player.
+     * @param name The player's name.
      */
     public PandemicDumbAI(String name) {
         super(name);
-    }
+    } // PandemicDumbAI()
 
+    /** receiveInfo()
+     * This method receives the current game state and makes decisions on what to do for the turn.
+     * @param info The current game info.
+     */
     @Override
     protected void receiveInfo(GameInfo info) {
         if (info instanceof PandemicGameState) {
@@ -87,6 +96,7 @@ public class PandemicDumbAI extends GameComputerPlayer {
                 }
 
                 else if (choice == PandemicGameState.SHUTTLE_FLIGHT) {
+                    // find all research stations on the board
                     City[] stations = new City[PandemicGameState.MAX_STATIONS];
                     int idx = 0;
                     for (int i = 0; i < Board.NUM_CITIES; i++) {
@@ -95,6 +105,7 @@ public class PandemicDumbAI extends GameComputerPlayer {
                             idx++;
                         }
                     }
+                    // pick a random city
                     int city = rng.nextInt(idx);
 
                     ShuttleFlightAction action = new ShuttleFlightAction(this);
@@ -128,5 +139,5 @@ public class PandemicDumbAI extends GameComputerPlayer {
                 }
             }
         }
-    }
+    } // receiveInfo()
 }

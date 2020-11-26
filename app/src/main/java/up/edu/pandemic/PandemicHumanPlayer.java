@@ -11,6 +11,13 @@ import up.edu.GameFramework.GameHumanPlayer;
 import up.edu.GameFramework.GameMainActivity;
 import up.edu.GameFramework.infoMessage.GameInfo;
 
+/** PandemicHumanPlayer()
+ * This class represents the human player for Pandemic. All of the GUI elements the player interacts
+ * with are shown here.
+ * @author Nick Scott, Sarah Strong, Emily Vo.
+ * @version 24 November 2020.
+ */
+
 public class PandemicHumanPlayer extends GameHumanPlayer implements View.OnClickListener,
 View.OnTouchListener {
     // instance variables
@@ -50,16 +57,20 @@ View.OnTouchListener {
     private ShuttleFlightAction shuttleFlight = null;
     private CharterFlightAction charterFlight = null;
 
-    /**
-     * constructor
-     *
+    /** PandemicHumanPlayer()
+     * This is the human player constructor.
      * @param name the name of the player
      */
     public PandemicHumanPlayer(String name) {
         super(name);
         this.cities = new Board();
-    }
+    } // PandemicHumanPlayer()
 
+    /** onClick()
+     * This method is called whenever a button is pressed by the player, which corresponds to an
+     * action.
+     * @param view The view on which the button is pressed.
+     */
     @Override
     public void onClick(View view) {
         // reset incomplete actions
@@ -117,27 +128,35 @@ View.OnTouchListener {
             DiscardAction action = new DiscardAction(this, button.getText().toString());
             this.game.sendAction(action);
         }
-    }
+    } // onClick()
 
+    /** getTopView()
+     * @return The main LinearLayout that contains all of the GUI.
+     */
     @Override
     public View getTopView() {
         return this.myActivity.findViewById(R.id.mainlayout);
-    }
+    } // getTopView()
 
+    /** receiveInfo()
+     * This method receives the current game state and displays that information to the player.
+     * @param info The current game info.
+     */
     @Override
     public void receiveInfo(GameInfo info) {
         if(info instanceof PandemicGameState) {
+            //update the info bar based off of how many actions are left.
             if(((PandemicGameState) info).getActionsLeft() == 4) {
                 ((PandemicGameState) info).setInfoBar("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) +
                         "'S TURN");
             }
-
-            if(((PandemicGameState) info).getActionsLeft() == 0 &&
+            else if(((PandemicGameState) info).getActionsLeft() == 0 &&
                     ((PandemicGameState) info).getCurrPlayer() == this.playerNum) {
                 ((PandemicGameState) info).setInfoBar("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) +
                         " - PLEASE END TURN");
             }
 
+            // update the info bar if the player needs to discard
             if(((PandemicGameState) info).needToDiscard()) {
                 ((PandemicGameState) info).setInfoBar("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) +
                         " - PLEASE DISCARD A CARD");
@@ -172,8 +191,15 @@ View.OnTouchListener {
             this.guiView.setState(((PandemicGameState) info));
             this.guiView.invalidate();
         }
-    }
+    } // receiveInfo()
 
+    /** updateCard()
+     * This method is given a card and will update its text and color based on the city it
+     * represents.
+     * @param num The index of the card.
+     * @param info The current game info.
+     * @param card The button of which to edit.
+     */
     public void updateCard(int num, GameInfo info, Button card) {
         card.setVisibility(View.VISIBLE);
         if(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).getCurrPlayer()][num].getName().equals("NULL")) {
@@ -196,8 +222,12 @@ View.OnTouchListener {
                 card.setBackgroundColor(Color.YELLOW);
                 break;
         }
-    }
+    } // updateCard()
 
+    /** setAsGui()
+     * This method sets all of the instance variables to the various GUI elements.
+     * @param activity The activity which contains all of these GUI elements.
+     */
     @Override
     public void setAsGui(GameMainActivity activity) {
         this.myActivity = activity;
@@ -250,8 +280,15 @@ View.OnTouchListener {
         this.card8.setOnClickListener(this);
 
         this.guiView.setOnTouchListener(this);
-    }
+    } // setAsGui()
 
+    /** onTouch()
+     * This method is called whenever the user touches on the PandemicGUIView. If it corresponds to
+     * a city, it makes an action based on it.
+     * @param v The view that was touched.
+     * @param event Information about the touch.
+     * @return Whether the touch did anything in particular.
+     */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         // get the coordinate of the touch
@@ -262,7 +299,9 @@ View.OnTouchListener {
         if(this.determineCity(x, y) == null) {
             return false;
         }
-//        infoBar.setText(this.determineCity(x, y).getName().toUpperCase() + " CHOSEN");
+
+        // unit test
+        // infoBar.setText(this.determineCity(x, y).getName().toUpperCase() + " CHOSEN");
 
         // check if a move action was initialized. if so, complete that action.
         if(this.driveFerry != null) {
@@ -295,8 +334,15 @@ View.OnTouchListener {
         }
 
         return false;
-    }
+    } // onTouch()
 
+    /** determineCity()
+     * This method is called whenever the PandemicGUIView is touched. It determines if the user
+     * touched within a hitbox of a city.
+     * @param x The x-coordinate of the touch.
+     * @param y The y-coordinate of the touch.
+     * @return The city, if any, that was touched.
+     */
     public City determineCity(float x, float y) {
         // go through each city and see if the coordinate falls within the city's parameters
         for(int i = 0; i < this.cities.getAllCities().length; i++) {
@@ -309,5 +355,5 @@ View.OnTouchListener {
         }
 
         return null;
-    }
+    } // determineCity()
 }

@@ -6,7 +6,7 @@ import java.util.Random;
  * This is a Deck object which contains an array of City objects, which will be used as City Cards
  * for the players in this case.
  * @author Nick Scott, Sarah Strong, and Emily Vo.
- * @version 20 October 2020.
+ * @version 24 November 2020.
  */
 public class Deck {
     // instance variables
@@ -201,6 +201,9 @@ public class Deck {
         return count;
     } // getDeckSize()
 
+    /** getCardsLeft()
+     * @return The number of cards left to be drawn.
+     */
     public int getCardsLeft() {
         int count = 0;
         for(int i = this.currPos + 1; i < this.deck.length; i++) {

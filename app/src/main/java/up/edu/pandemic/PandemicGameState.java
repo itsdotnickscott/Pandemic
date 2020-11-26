@@ -8,7 +8,7 @@ import java.util.Random;
  * This is the game state for Pandemic which contains all the information that is required to
  * play the game.
  * @author Nick Scott, Sarah Strong, and Emily Vo.
- * @version 20 October 2020.
+ * @version 24 November 2020.
  */
 public class PandemicGameState extends GameState {
     // game rule variables
@@ -758,7 +758,7 @@ public class PandemicGameState extends GameState {
 
         // if it gets here, not enough cards were found of one color
         return -1;
-    }
+    } // countFiveCards()
 
     /** checkIfEradicated()
      * This methods checks all diseases to eradicate if they have been cured and treated in
@@ -869,6 +869,7 @@ public class PandemicGameState extends GameState {
         return canDo;
     } // checkDoableActions()
 
+    // setter
     public void setInfoBar(String info) {
         this.infoBar = info;
     }

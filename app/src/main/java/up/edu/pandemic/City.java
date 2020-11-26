@@ -4,7 +4,7 @@ package up.edu.pandemic;
  * This is a City object, which represents a location on the game board, and is also used as
  * player cards.
  * @author Nick Scott, Sarah Strong, Emily Vo
- * @version 20 October 2020
+ * @version 24 November 2020
  */
 
 public class City {
@@ -162,9 +162,12 @@ public class City {
         return outbreaks;
     } // outbreak()
 
+    /** resetHasOutbroke()
+     * This method resets the hasOutbroke boolean back to false after each outbreak.
+     */
     public void resetHasOutbroke() {
         this.hasOutbroke = false;
-    }
+    } // resetHasOutbroke()
 
     /** getLocation()
      * @return A "hitbox" of the city, represented by coordinates.

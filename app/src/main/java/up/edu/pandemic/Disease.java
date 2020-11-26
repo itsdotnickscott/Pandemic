@@ -4,7 +4,7 @@ package up.edu.pandemic;
  * This is a Disease object, which keeps track of how many disease cubes it has left, and the
  * state of the disease (ie. is it cured?).
  * @author Nick Scott, Sarah Strong, Emily Vo.
- * @version 20 October 2020.
+ * @version 24 November 2020.
  */
 
 public class Disease {
@@ -58,6 +58,9 @@ public class Disease {
         return this.cubesLeft;
     } // getCubesLeft()
 
+    /** getName()
+     * @return The name of the disease.
+     */
     public String getName() {
         switch(this.color) {
             case BLUE: return "Blue";

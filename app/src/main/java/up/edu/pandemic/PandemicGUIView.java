@@ -10,6 +10,12 @@ import android.graphics.Canvas;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+/** PandemicGUIView
+ * This object is the main graphic representation used to display information for the human player.
+ * @author Nick Scott, Sarah Strong, Emily Vo.
+ * @version 24 November 2020.
+ */
+
 public class PandemicGUIView extends SurfaceView {
     // instance variables
     private Bitmap cityNames;
@@ -72,6 +78,11 @@ public class PandemicGUIView extends SurfaceView {
 
     private PandemicGameState state;
 
+    /** PandemicGUIView()
+     * This method initializes all of the Bitmaps that will be used to print onto the screen.
+     * @param context The context of the resources.
+     * @param attributes The attributes of the resources.
+     */
     public PandemicGUIView(Context context, AttributeSet attributes) {
         super(context, attributes);
         setWillNotDraw(false);
@@ -136,8 +147,12 @@ public class PandemicGUIView extends SurfaceView {
         textBold = new Paint();
         Typeface bold = Typeface.createFromAsset(context.getAssets(), "font/lgsb.ttf");
         textBold.setTypeface(bold);
-    }
+    } // PandemicGUIView()
 
+    /** onDraw()
+     * This method is called whenever information has to be printed onto the screen for the player.
+     * @param canvas The canvas of which to draw on.
+     */
     @Override
     public void onDraw(Canvas canvas) {
         canvas.drawBitmap(this.gui, 0.0f, 0.0f, null);
@@ -153,8 +168,13 @@ public class PandemicGUIView extends SurfaceView {
         }
 
         canvas.drawBitmap(this.cityNames, 0.0f, 0.0f, null);
-    }
+    } // onDraw()
 
+    /** updateInfoBar()
+     * This method updates the info bars at the top and the bottom screen, which show actions and
+     * what cities have been infected.
+     * @param canvas The canvas of which to draw on.
+     */
     public void updateInfoBar(Canvas canvas) {
         textBold.setColor(Color.WHITE);
         textBold.setTextSize(45.0f);
@@ -171,8 +191,12 @@ public class PandemicGUIView extends SurfaceView {
         canvas.drawText(this.state.getInfoBarEpidemic(), startLeft, startHeight, this.textBold);
         canvas.drawText(this.state.getInfoBarInfected(), startLeft, startHeight + addBy, this.textBold);
         canvas.drawText(this.state.getInfoBarOutbroke(), startLeft, startHeight + addBy * 2, this.textBold);
-    }
+    } // updateInfoBar()
 
+    /** updateActions()
+     * This method updates the actions left for the player.
+     * @param canvas The canvas of which to draw on.
+     */
     public void updateActions(Canvas canvas) {
         float startLeft = 177.75f;
         float startHeight = 712.0f;
@@ -184,13 +208,18 @@ public class PandemicGUIView extends SurfaceView {
             case 3: canvas.drawBitmap(this.actions3, startLeft, startHeight, null); break;
             case 4: canvas.drawBitmap(this.actions4, startLeft, startHeight, null); break;
         }
-    }
+    } // updateActions()
 
+    /** updateInfo()
+     * This method updates the number of cubes left, turns left, epidemics left, and infection rate.
+     * @param canvas The canvas of which to draw on.
+     */
     public void updateInfo(Canvas canvas) {
         float startLeft = 200.0f;
         float centerCoord = 75.0f;
         float addBy = 71.0f;
 
+        // update each disease's cubes left
         textBold.setColor(Color.WHITE);
         textBold.setTextSize(56.0f);
         for(int i = 0; i < Disease.NUM_DISEASES; i++) {
@@ -202,6 +231,7 @@ public class PandemicGUIView extends SurfaceView {
         centerCoord = 80.0f;
         addBy = 155.0f;
 
+        // infection rate and epidemics left
         textBold.setColor(Color.BLACK);
         canvas.drawText("" + this.state.getInfRate(),
                 startLeft, centerCoord, this.textBold);
@@ -210,19 +240,28 @@ public class PandemicGUIView extends SurfaceView {
 
         startLeft = 1643.0f;
 
+        // turns left, which is player cards left divided by 2
         canvas.drawText("" + (this.state.getPlayerDeck().getCardsLeft() / 2),
                 startLeft, centerCoord, this.textBold);
-    }
+    } // updateInfo()
 
+    /** updateCities()
+     * This method updates everything on the map including research stations, player pawns, and
+     * disease cubes.
+     * @param canvas The canvas of which to draw on.
+     */
     public void updateCities(Canvas canvas) {
         for(int i = 0; i < Board.NUM_CITIES; i++) {
+            // get the top left corner of the hitbox of the city
             float x = this.state.getCities().getAllCities()[i].getLocation()[0][0];
             float y = this.state.getCities().getAllCities()[i].getLocation()[0][1];
 
+            // if there is a research station
             if(this.state.getCities().getAllCities()[i].hasStation()) {
                 canvas.drawBitmap(this.researchStation, x, y, null);
             }
 
+            // print cubes based on how many are there
             switch(this.state.getCities().getAllCities()[i].getColor()) {
                 case Disease.BLUE:
                     switch (this.state.getCities().getAllCities()[i].getCubes()) {
@@ -278,6 +317,7 @@ public class PandemicGUIView extends SurfaceView {
                     break;
             }
 
+            // print player pawns, if anyone is at that city
             for(int j = 0; j < this.state.getCurrCity().length; j++) {
                 if(this.state.getCurrCity()[j].getName().equals(this.state.getCities().getAllCities()[i].getName())) {
                     switch(j) {
@@ -297,8 +337,12 @@ public class PandemicGUIView extends SurfaceView {
                 }
             }
         }
-    }
+    } // updateCities()
 
+    /** updateCurrPlayer()
+     * This method updates the current player on the GUI.
+     * @param canvas The canvas of which to draw on.
+     */
     public void updateCurrPlayer(Canvas canvas) {
         float centerCoord = 160.0f;
         float height = 825.0f;
@@ -309,8 +353,12 @@ public class PandemicGUIView extends SurfaceView {
             case PandemicHumanPlayer.BLUE: canvas.drawBitmap(this.bigBlue, centerCoord, height, null); break;
             case PandemicHumanPlayer.GREEN: canvas.drawBitmap(this.bigGreen, centerCoord, height, null); break;
         }
-    }
+    } // updateCurrPlayer()
 
+    /** updateOutbreaks()
+     * This method updates the number of outbreaks that have already occurred.
+     * @param canvas The canvas of which to draw on.
+     */
     public void updateOutbreaks(Canvas canvas) {
         switch(this.state.getOutbreaks()) {
             case 0: canvas.drawBitmap(this.outbreak0, 0.0f, 0.0f, null); break;
@@ -322,13 +370,18 @@ public class PandemicGUIView extends SurfaceView {
             case 6: canvas.drawBitmap(this.outbreak6, 0.0f, 0.0f, null); break;
             case 7: canvas.drawBitmap(this.outbreak7, 0.0f, 0.0f, null); break;
         }
-    }
+    } // updateOutbreaks()
 
+    /** updateCures()
+     * This method updates the states of each of the diseases.
+     * @param canvas The canvas of which to draw on.
+     */
     public void updateCures(Canvas canvas) {
         float centerCoord = 49.0f;
         float startHeight = 530.0f;
         float addBy = 80.0f;
 
+        // based on each disease, update whether it is cured, uncured, or eradicated.
         for (int i = 0; i < Disease.NUM_DISEASES; i++) {
             switch (i) {
                 case Disease.BLUE:
@@ -385,8 +438,9 @@ public class PandemicGUIView extends SurfaceView {
                     break;
             }
         }
-    }
+    } // updateCures()
 
+    // setter
     public void setState(PandemicGameState ref) {
         this.state = ref;
     }

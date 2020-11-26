@@ -4,25 +4,48 @@ import up.edu.GameFramework.GamePlayer;
 import up.edu.GameFramework.LocalGame;
 import up.edu.GameFramework.actionMessage.GameAction;
 
+/** PandemicLocalGame
+ * This class holds the information relevant to the current local game.
+ * @author Nick Scott, Sarah Strong, Emily Vo.
+ * @version 24 November 2020.
+ */
+
 public class PandemicLocalGame extends LocalGame {
     private PandemicGameState gameState;
 
+    /** PandemicLocalGame()
+     * This is the constructor for the local game.
+     * @param num The number of players playing the game.
+     */
     public PandemicLocalGame(int num) {
         super();
         this.gameState = new PandemicGameState(num);
-    }
+    } // PandemicLocalGame()
 
+    /** sendUpdatedStateTo()
+     * This method sends a deep copy version of the current game state to the player.
+     * @param p The player in which to send the copy to.
+     */
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
         PandemicGameState copy = new PandemicGameState(this.gameState);
         p.sendInfo(copy);
-    }
+    } // sendUpdatedStateTo()
 
+    /** canMove()
+     * This method checks to see if the current player can make a move.
+     * @param playerIdx The player's player-number (ID).
+     * @return Whether that player can currently make a move.
+     */
     @Override
     protected boolean canMove(int playerIdx) {
         return this.gameState.getCurrPlayer() == playerIdx;
-    }
+    } // canMove()
 
+    /** checkIfGameOver()
+     * This method checks to see if the game has been won or lost.
+     * @return A String that tells the player whether they won or lost.
+     */
     @Override
     protected String checkIfGameOver() {
         if(this.gameState.getGameCondition() == PandemicGameState.LOSE) {
@@ -32,8 +55,13 @@ public class PandemicLocalGame extends LocalGame {
             return "Game Over. You saved the world. ";
         }
         return null;
-    }
+    } // checkIfGameOver()
 
+    /** makeMove()
+     * This method makes a move and sends it to the game state.
+     * @param action The move that the player has sent to the game.
+     * @return Whether the action was an instance of any of the Pandemic-related actions.
+     */
     @Override
     protected boolean makeMove(GameAction action) {
         // based on the game action made, this calls the appropriate method in PandemicGameState
@@ -72,5 +100,5 @@ public class PandemicLocalGame extends LocalGame {
         } // end turn
 
         return false;
-    }
+    } // makeMove()
 }

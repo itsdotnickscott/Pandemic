@@ -1,11 +1,21 @@
 package up.edu.pandemic;
 
+/** Board
+ * This is a Board object which contains all of the information about the cities on the game board.
+ * @author Nick Scott, Sarah Strong, and Emily Vo.
+ * @version 24 November 2020.
+ */
+
+
 public class Board {
     // instance variables
     public static final int NUM_CITIES = 48;
 
     private City[] allCities;
 
+    /** Board()
+     * This is the constructor for Board, which creates all of the cities on the board.
+     */
     public Board() {
         // blue cities
         City chicago = new City("Chicago", Disease.BLUE, new float[][]{{333.8261f, 185.81516f}, {473.8261f, 325.81516f}});
@@ -125,8 +135,12 @@ public class Board {
                 moscow, istanbul, algiers, tehran, baghdad, cairo, riyadh, karachi, delhi, mumbai,
                 chennai, kolkata, beijing, seoul, tokyo, shanghai, hongKong, taipei, osaka, bangkok,
                 hoChiMinhCity, manila, jakarta, sydney};
-    }
+    } // Board()
 
+    /** Board()
+     * This is a deep copy constructor for Board.
+     * @param orig The original Board to copy.
+     */
     public Board(Board orig) {
         this.allCities = new City[NUM_CITIES];
         for(int i = 0; i < NUM_CITIES; i++) {
@@ -136,7 +150,7 @@ public class Board {
 
     public City[] getAllCities() {
         return this.allCities;
-    }
+    } // Board()
 
     /** getCity()
      * This is a helper method which finds a city in the deck.
@@ -153,9 +167,12 @@ public class Board {
         return null;
     } // getCity()
 
+    /** resetHasOutbroke()
+     * This method resets every city's outbroke boolean on the board in the case of an outbreak.
+     */
     public void resetHasOutbroke() {
         for(int i = 0; i < NUM_CITIES; i++) {
             this.allCities[i].resetHasOutbroke();
         }
-    }
+    } // resetHasOutbroke()
 }
