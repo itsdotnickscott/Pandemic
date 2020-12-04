@@ -79,6 +79,15 @@ View.OnTouchListener {
         this.directFlight = null;
         this.shuttleFlight = null;
 
+        /*
+         External Citation
+         Date: 1 November 2020.
+         Problem: Had trouble getting the Drive/Ferry action to handle two different button presses.
+         Resource: Andrew Nuxoll.
+         Solution: Professor Nuxoll recommended we create a "partially complete" action, which
+         creates an action, stores the incomplete action, and completes it later.
+         */
+
         // send an action based off of the button pressed
         if(view.getId() == R.id.drivebutton) {
             this.driveFerry = new DriveFerryAction(this);
@@ -147,18 +156,21 @@ View.OnTouchListener {
         if(info instanceof PandemicGameState) {
             //update the info bar based off of how many actions are left.
             if(((PandemicGameState) info).getActionsLeft() == 4) {
-                ((PandemicGameState) info).setInfoBar("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) +
+                ((PandemicGameState) info).setInfoBar("PLAYER " +
+                        (((PandemicGameState) info).getCurrPlayer() + 1) +
                         "'S TURN");
             }
             else if(((PandemicGameState) info).getActionsLeft() == 0 &&
                     ((PandemicGameState) info).getCurrPlayer() == this.playerNum) {
-                ((PandemicGameState) info).setInfoBar("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) +
+                ((PandemicGameState) info).setInfoBar("PLAYER " +
+                        (((PandemicGameState) info).getCurrPlayer() + 1) +
                         " - PLEASE END TURN");
             }
 
             // update the info bar if the player needs to discard
             if(((PandemicGameState) info).needToDiscard()) {
-                ((PandemicGameState) info).setInfoBar("PLAYER " + (((PandemicGameState) info).getCurrPlayer() + 1) +
+                ((PandemicGameState) info).setInfoBar("PLAYER " +
+                        (((PandemicGameState) info).getCurrPlayer() + 1) +
                         " - PLEASE DISCARD A CARD");
             }
 
@@ -202,13 +214,16 @@ View.OnTouchListener {
      */
     public void updateCard(int num, GameInfo info, Button card) {
         card.setVisibility(View.VISIBLE);
-        if(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).getCurrPlayer()][num].getName().equals("NULL")) {
+        if(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).
+                getCurrPlayer()][num].getName().equals("NULL")) {
             card.setVisibility(View.GONE);
             return;
         }
-        card.setText(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).getCurrPlayer()][num].getName());
+        card.setText(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).
+                getCurrPlayer()][num].getName());
 
-        switch(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).getCurrPlayer()][num].getColor()){
+        switch(((PandemicGameState) info).getPlayerHand()[((PandemicGameState) info).
+                getCurrPlayer()][num].getColor()){
             case Disease.BLUE:
                 card.setBackgroundColor(Color.BLUE);
                 break;

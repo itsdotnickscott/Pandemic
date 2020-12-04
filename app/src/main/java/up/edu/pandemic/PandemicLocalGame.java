@@ -66,16 +66,20 @@ public class PandemicLocalGame extends LocalGame {
     protected boolean makeMove(GameAction action) {
         // based on the game action made, this calls the appropriate method in PandemicGameState
         if (action instanceof DriveFerryAction){
-            return gameState.driveFerry(gameState.getCurrPlayer(), ((DriveFerryAction)action).getEndCity());
+            return gameState.driveFerry(gameState.getCurrPlayer(), ((DriveFerryAction)action).
+                    getEndCity());
         } // drive/ferry
         else if (action instanceof ShuttleFlightAction){
-            return gameState.shuttleFlight(gameState.getCurrPlayer(), ((ShuttleFlightAction)action).getEndCity());
+            return gameState.shuttleFlight(gameState.getCurrPlayer(), ((ShuttleFlightAction)action).
+                    getEndCity());
         } // shuttle flight
         else if (action instanceof DirectFlightAction){
-            return gameState.directFlight(gameState.getCurrPlayer(), ((DirectFlightAction)action).getEndCity());
+            return gameState.directFlight(gameState.getCurrPlayer(), ((DirectFlightAction)action).
+                    getEndCity());
         } // direct flight
         else if (action instanceof CharterFlightAction){
-            return gameState.charterFlight(gameState.getCurrPlayer(), ((CharterFlightAction) action).getEndCity());
+            return gameState.charterFlight(gameState.getCurrPlayer(), ((CharterFlightAction) action).
+                    getEndCity());
         } // charter flight
         else if (action instanceof ShareAction){
             return gameState.share(gameState.getCurrPlayer());

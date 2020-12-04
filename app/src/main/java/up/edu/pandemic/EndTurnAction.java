@@ -3,7 +3,15 @@ package up.edu.pandemic;
 import up.edu.GameFramework.GamePlayer;
 import up.edu.GameFramework.actionMessage.GameAction;
 
-/** EndTurnAction()
+/*
+ External Citation
+ Date: 20 October 2020.
+ Problem: Didn't know how to handle "end of turn" actions.
+ Resource: Andrew Nuxoll.
+ Solution: After asking, Professor Nuxoll that we make "end turn" an action itself.
+ */
+
+/** EndTurnAction
  * This is an action that represents an End Turn action.
  * @author Nick Scott, Sarah Strong, and Emily Vo.
  * @version 24 November 2020.

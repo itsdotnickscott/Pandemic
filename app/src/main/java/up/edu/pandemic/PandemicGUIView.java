@@ -189,8 +189,10 @@ public class PandemicGUIView extends SurfaceView {
         startHeight = 868.5f;
         float addBy = 24.0f;
         canvas.drawText(this.state.getInfoBarEpidemic(), startLeft, startHeight, this.textBold);
-        canvas.drawText(this.state.getInfoBarInfected(), startLeft, startHeight + addBy, this.textBold);
-        canvas.drawText(this.state.getInfoBarOutbroke(), startLeft, startHeight + addBy * 2, this.textBold);
+        canvas.drawText(this.state.getInfoBarInfected(), startLeft, startHeight + addBy,
+                this.textBold);
+        canvas.drawText(this.state.getInfoBarOutbroke(), startLeft, startHeight + addBy * 2,
+                this.textBold);
     } // updateInfoBar()
 
     /** updateActions()
@@ -319,7 +321,8 @@ public class PandemicGUIView extends SurfaceView {
 
             // print player pawns, if anyone is at that city
             for(int j = 0; j < this.state.getCurrCity().length; j++) {
-                if(this.state.getCurrCity()[j].getName().equals(this.state.getCities().getAllCities()[i].getName())) {
+                if(this.state.getCurrCity()[j].getName().equals(this.state.getCities().
+                        getAllCities()[i].getName())) {
                     switch(j) {
                         case PandemicHumanPlayer.PINK:
                             canvas.drawBitmap(this.pinkPawn, x, y, null);
@@ -348,10 +351,14 @@ public class PandemicGUIView extends SurfaceView {
         float height = 825.0f;
 
         switch(this.state.getCurrPlayer()) {
-            case PandemicHumanPlayer.PINK: canvas.drawBitmap(this.bigPink, centerCoord, height, null); break;
-            case PandemicHumanPlayer.ORANGE: canvas.drawBitmap(this.bigOrange, centerCoord, height, null); break;
-            case PandemicHumanPlayer.BLUE: canvas.drawBitmap(this.bigBlue, centerCoord, height, null); break;
-            case PandemicHumanPlayer.GREEN: canvas.drawBitmap(this.bigGreen, centerCoord, height, null); break;
+            case PandemicHumanPlayer.PINK: canvas.drawBitmap(this.bigPink, centerCoord, height,
+                    null); break;
+            case PandemicHumanPlayer.ORANGE: canvas.drawBitmap(this.bigOrange, centerCoord, height,
+                    null); break;
+            case PandemicHumanPlayer.BLUE: canvas.drawBitmap(this.bigBlue, centerCoord, height,
+                    null); break;
+            case PandemicHumanPlayer.GREEN: canvas.drawBitmap(this.bigGreen, centerCoord, height,
+                    null); break;
         }
     } // updateCurrPlayer()
 
@@ -387,58 +394,79 @@ public class PandemicGUIView extends SurfaceView {
                 case Disease.BLUE:
                     switch (this.state.getDiseases()[i].getState()) {
                         case Disease.CURED:
-                            canvas.drawBitmap(curedBlue, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(curedBlue, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                         case Disease.UNCURED:
-                            canvas.drawBitmap(uncuredBlue, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(uncuredBlue, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                         case Disease.ERADICATED:
-                            canvas.drawBitmap(eradBlue, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(eradBlue, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                     }
                     break;
                 case Disease.YELLOW:
                     switch (this.state.getDiseases()[i].getState()) {
                         case Disease.CURED:
-                            canvas.drawBitmap(curedYellow, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(curedYellow, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                         case Disease.UNCURED:
-                            canvas.drawBitmap(uncuredYellow, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(uncuredYellow, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                         case Disease.ERADICATED:
-                            canvas.drawBitmap(eradYellow, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(eradYellow, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                     }
                     break;
                 case Disease.BLACK:
                     switch (this.state.getDiseases()[i].getState()) {
                         case Disease.CURED:
-                            canvas.drawBitmap(curedBlack, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(curedBlack, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                         case Disease.UNCURED:
-                            canvas.drawBitmap(uncuredBlack, centerCoord,startHeight + (addBy * i), null);
+                            canvas.drawBitmap(uncuredBlack, centerCoord,startHeight +
+                                    (addBy * i), null);
                             break;
                         case Disease.ERADICATED:
-                            canvas.drawBitmap(eradBlack, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(eradBlack, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                     }
                     break;
                 case Disease.RED:
                     switch (this.state.getDiseases()[i].getState()) {
                         case Disease.CURED:
-                            canvas.drawBitmap(curedRed, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(curedRed, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                         case Disease.UNCURED:
-                            canvas.drawBitmap(uncuredRed, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(uncuredRed, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                         case Disease.ERADICATED:
-                            canvas.drawBitmap(eradRed, centerCoord, startHeight + (addBy * i), null);
+                            canvas.drawBitmap(eradRed, centerCoord, startHeight +
+                                    (addBy * i), null);
                             break;
                     }
                     break;
             }
         }
     } // updateCures()
+
+    /*
+     External Citation
+     Date: 9 November 2020.
+     Problem: Had trouble getting the map to update based on the state.
+     Resource: Andrew Nuxoll.
+     Solution: Nuxoll recommended we pass in a reference into PandemicMapView (now PandemicGUIView)
+     variable.
+     */
 
     // setter
     public void setState(PandemicGameState ref) {

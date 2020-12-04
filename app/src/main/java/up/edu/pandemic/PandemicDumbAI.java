@@ -38,9 +38,11 @@ public class PandemicDumbAI extends GameComputerPlayer {
             // if the cpu needs to discard
             if (((PandemicGameState) info).needToDiscard()) {
                 int choice = rng.nextInt(PandemicGameState.HAND_LIMIT + 1);
-                if (!((PandemicGameState) info).getPlayerHand()[this.playerNum][choice].getName().equals("NULL")) {
+                if (!((PandemicGameState) info).getPlayerHand()[this.playerNum][choice].getName().
+                        equals("NULL")) {
                     DiscardAction action = new DiscardAction(this,
-                            ((PandemicGameState) info).getPlayerHand()[this.playerNum][choice].getName());
+                            ((PandemicGameState) info).getPlayerHand()[this.playerNum][choice].
+                                    getName());
                     this.game.sendAction(action);
                 }
             }
@@ -70,10 +72,12 @@ public class PandemicDumbAI extends GameComputerPlayer {
 
                 if (choice == PandemicGameState.DRIVE_FERRY) {
                     // randomly pick a connected city
-                    int connect = rng.nextInt(((PandemicGameState) info).getCurrCity()[this.playerNum].getConnections().length);
+                    int connect = rng.nextInt(((PandemicGameState) info).
+                            getCurrCity()[this.playerNum].getConnections().length);
 
                     DriveFerryAction action = new DriveFerryAction(this);
-                    action.setEndCity(((PandemicGameState) info).getCurrCity()[this.playerNum].getConnections()[connect]);
+                    action.setEndCity(((PandemicGameState) info).getCurrCity()[this.playerNum].
+                            getConnections()[connect]);
                     this.game.sendAction(action);
                 }
 

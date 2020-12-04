@@ -196,6 +196,14 @@ public class PandemicGameState extends GameState {
         this.epidemicPulled = orig.epidemicPulled;
     } // PandemicState()
 
+    /*
+     External Citation
+     Date: 20 October 2020.
+     Problem: Didn't know how to implement prompting the user to discard.
+     Resource: Andrew Nuxoll.
+     Solution: After asking Professor Nuxoll, he recommended we create a "needToDiscard" variable.
+     */
+
     /** needToDiscard()
      * This method checks to see if the current player has too many cards. If so, the only action
      * the player can do is discard a card.
@@ -300,6 +308,14 @@ public class PandemicGameState extends GameState {
         if (!this.checkDoableActions(player)[SHUTTLE_FLIGHT]) {
             return false;
         }
+
+        /*
+         External Citation
+         Date: 17 November 2020.
+         Problem: Shuttle Flight was not working in-game.
+         Resource: Jacob Noble
+         Solution: After project review, Jacob identified the bug in his code report.
+         */
 
         //check if both locations have a research station, if so, move them
         if (currCity[player].hasStation() && this.cities.getCity(newCity.getName()).hasStation()) {
@@ -471,6 +487,16 @@ public class PandemicGameState extends GameState {
         if(!this.checkDoableActions(player)[END_TURN]) {
             return false;
         }
+
+        /*
+         External Citation
+         Date: 20 October 2020.
+         Problem: Had trouble getting the player to both draw and discard in the same action if
+         necessary.
+         Resource: Andrew Nuxoll.
+         Solution: We video chatted with Professor Nuxoll who helped create a "drawCardsLeft"
+         variable.
+         */
 
         if(this.actionsLeft == 0) {
             int origOutbreak = this.outbreaks;
@@ -766,11 +792,21 @@ public class PandemicGameState extends GameState {
      */
     public void checkIfEradicated() {
         for(int i = 0; i < Disease.NUM_DISEASES; i++) {
-            if (diseases[i].getCubesLeft() == Disease.NUM_CUBES && diseases[i].getState() == Disease.CURED) {
+            if (diseases[i].getCubesLeft() == Disease.NUM_CUBES &&
+                    diseases[i].getState() == Disease.CURED) {
                 diseases[i].eradicate();
             }
         }
     } // checkIfEradicated()
+
+    /*
+     External Citation
+     Date: 20 October 2020.
+     Problem: Didn't know how to implement a unit test handling illegal moves.
+     Resource: Andrew Nuxoll.
+     Solution: After chatting with Professor Nuxoll, he recommended creating a method that
+     identified which moves were illegal.
+     */
 
     /** checkDoableActions()
      * This method checks to see what actions can be performed; not necessarily if they are valid.
@@ -830,7 +866,8 @@ public class PandemicGameState extends GameState {
                                 else {
                                     for(int j = 0; j < HAND_LIMIT + 1; j++) {
                                         // check to see if that player has that city card
-                                        if (playerHands[i][j].getName().equals(this.currCity[this.currPlayer].getName())) {
+                                        if (playerHands[i][j].getName().equals
+                                                (this.currCity[this.currPlayer].getName())) {
                                             canDo[SHARE] = true;
                                         }
                                     }

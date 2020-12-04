@@ -8,12 +8,13 @@ import up.edu.GameFramework.gameConfiguration.GameConfig;
 import up.edu.GameFramework.gameConfiguration.GamePlayerType;
 
 /** PandemicMainActivity
- * Pandemic supports all rules of play that was specified, and the GUI is fully complete. Both a
- * Dumb and Smart AI are present, and you can play with 2 - 4 players with any combination of the
- * two.
+ * Pandemic is fully implemented. All design specifications that was listed are completely
+ * functional, with two types of AIs.
  *
  * KNOWN BUGS:
  *  - None
+ *
+ *  NOTE: No functionality has been added since the Beta Release. The code has remained the same.
  *
  * @author Nick Scott, Sarah Strong, and Emily Vo.
  * @version 24 November 2020.
@@ -76,6 +77,13 @@ public class PandemicMainActivity extends GameMainActivity {
      */
     @Override
     public LocalGame createLocalGame() {
+        /*
+         External Citation
+         Date: 2 November 2020. (Updated on 24 November 2020).
+         Problem: Had trouble getting the number of players into the local game constructor.
+         Resource: Andrew Nuxoll.
+         Solution: Video chatted with Nuxoll until we identified the bug in the GameFramework.
+         */
         return new PandemicLocalGame(this.restartConfig.getNumPlayers());
     } // createLocalGame()
 }

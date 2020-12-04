@@ -40,6 +40,15 @@ public class PandemicSmartAI extends GameComputerPlayer {
     @Override
     protected void receiveInfo(GameInfo info) {
         if(info instanceof PandemicGameState){
+
+            /*
+             External Citation
+             Date: 24 November 2020.
+             Problem: Smart AI got stuck after completing one action.
+             Resource: Andrew Nuxoll.
+             Solution: Nuxoll identified the issue as our code not checking the player's turn first.
+             */
+
             if (((PandemicGameState) info).getCurrPlayer() != this.playerNum) {
                 return;
             }
@@ -211,7 +220,8 @@ public class PandemicSmartAI extends GameComputerPlayer {
             }
 
             // if the disease is already cured, prioritize this discard.
-            if(this.state.getDiseases()[this.state.getPlayerHand()[this.playerNum][i].getColor()].getState() != Disease.UNCURED) {
+            if(this.state.getDiseases()[this.state.getPlayerHand()[this.playerNum][i].getColor()].
+                    getState() != Disease.UNCURED) {
                 ranks[i]++;
             }
 
@@ -242,7 +252,7 @@ public class PandemicSmartAI extends GameComputerPlayer {
         return findShortestPath(paths);
     }
 
-    /**
+    /*
      External Citation
      Date: 24 November 2020.
      Problem: Had trouble finding a path to a target city.
@@ -359,7 +369,7 @@ public class PandemicSmartAI extends GameComputerPlayer {
         int size = MAX_DEPTH_CURE + 1; // no path will be larger than this
         for(int i = 0; i < paths.length; i++) {
             if(paths[i] != null) {
-                // if the current path is shorter than previously seen, make it the new shortest path
+                // if current path is shorter than previously seen, make it the new shortest path
                 if(paths[i].length < size) {
                     shortest = paths[i];
                     size = paths[i].length;
